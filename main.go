@@ -6,30 +6,46 @@ import (
 	"strings"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(2)
-	}
+func main() {
+	fmt.Println("This is my chatbot :\"P\n---")
+
+	trainingData := extractTrainingResponses("./training_data/chats")
+	fmt.Println(trainingData)
 }
 
-func main() {
-	fmt.Println("This is my chatbot :\"P\n---\n")
-
-	file_data, err := ioutil.ReadFile("./training_data/chats")
+func extractTrainingResponses(filename string) map[string][]string {
+	file_data, err := ioutil.ReadFile(filename)
 
 	if err != nil {
 		panic(err)
 	}
 
-	text := string(file_data)
+	// Stores the messages grouped by category.
+	grouped := make(map[string][]string)
+
+	// Remove null characters.
+	text := strings.Replace(string(file_data), "\x00", "", -1)
+
+	// Separate the responses.
 	all_responses := strings.Split(text, "#")
 
-	for _, message := range all_responses {
-		fmt.Println(message)
-	}
-}
+	// Group messages into categories.
+	for _, response := range all_responses {
+		parts := strings.Split(response, "(")
 
-type CategoryMessages struct {
-	category string
-	messages []string
+		if len(parts) <= 1 {
+			continue
+		}
+
+		message := parts[0]
+		category := parts[1][:len(parts[1])-1]
+
+		if grouped[category] == nil {
+			grouped[category] = []string{message}
+		} else {
+			grouped[category] = append(grouped[category], message)
+		}
+	}
+
+	return grouped
 }
