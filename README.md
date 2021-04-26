@@ -1,11 +1,24 @@
 # Chatbot API
 
-It receives a text message from the customer to the restaurant and returns a text response from my neural network to the given message along with its corresponding text classification.
+It receives a text message from the customer to the restaurant and returns the classification of the given message.
 
 ## Steps
 
-1. Read the training data
-2. Use it
-3. Transforms it
-4. Build a classification neural network
-5. Create the chatbot endpoint
+1. Get the training data
+2. Transform it
+3. Build a classification neural network that recives a text message and outputs the classification of the text.
+    - Must be resilient to typographic and spelling mistakes (which implies the network has to understand them)
+    - Train the model with the training dataset and save it in a file.
+  4. Create the chatbot endpoint
+
+## System overview
+
+Just a fun graphic:
+
+```
+     message
+User ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+   ↑                                      ↓
+   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Endpoint
+                           classification
+```
