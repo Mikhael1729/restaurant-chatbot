@@ -25,7 +25,7 @@ import TitleDescription from "./components/TitleDescription";
 .container {
   background-color: var(--surface-b);
   padding: 3em;
-  height: 100vh;
+  min-height: 100vh;
 
   .title-description {
     color: red;

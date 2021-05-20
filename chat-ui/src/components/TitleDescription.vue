@@ -2,7 +2,7 @@
   <div class="title-description">
     <h1 class="title">Restaurante<br />Chat</h1>
 
-    <p class="description">
+    <p>
       <i>
         Puedes escribirnos cualquier duda acerca de nuestros servicios por medio
         de este chat
@@ -20,16 +20,11 @@
     color: #dbdbdb;
   }
 
-  .description {
+  p {
     flex: 1;
-    margin-top: 1em;
+    margin-top: 0.5em;
     font-size: 0.8em;
     line-height: 170%;
-  }
-
-  .logo {
-    width: 80px;
-    align-self: center;
   }
 }
 </style>

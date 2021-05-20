@@ -1,6 +1,12 @@
 <template>
-  <div :class="{ 'chat-message': true, 'end-aligned': type === 'sender' }">
-    <Avatar shape="circle" size="small" class="avatar">
+  <div
+    :class="{ 'chat-message': true, 'chat-message-sender': type === 'sender' }"
+  >
+    <Avatar
+      shape="circle"
+      size="small"
+      :class="{ avatar: true, 'avatar-sender': type === 'sender' }"
+    >
       <i
         v-if="type === 'reciver'"
         class="pi pi-android"
@@ -9,10 +15,10 @@
       <i v-else class="pi pi-user" style="background: inherit" />
     </Avatar>
     <div class="message">
-      <p class="text">
+      <p>
         {{ text }}
       </p>
-      <span class="date">{{ stringDate }}</span>
+      <span>{{ stringDate }}</span>
     </div>
   </div>
 </template>
@@ -39,12 +45,14 @@ export default defineComponent({
   background: inherit;
   display: flex;
 
-  & > *:not(:last-child) {
-    margin-right: 1em;
-  }
-
   .avatar {
     align-self: flex-end;
+    margin-right: 0.5em;
+  }
+
+  .avatar-sender {
+    margin-left: 0.5em;
+    margin-right: 0px;
   }
 
   .message {
@@ -57,11 +65,11 @@ export default defineComponent({
     color: var(--text-color);
     background: inherit;
 
-    .text {
+    p {
       margin-bottom: 0.5em;
       background: inherit;
     }
-    .date {
+    span {
       text-align: right;
       font-size: 0.8em;
       color: var(--surface-900);
@@ -69,11 +77,8 @@ export default defineComponent({
     }
   }
 }
-.end-aligned {
-  align-self: flex-end;
-}
 
-.start-aligned {
-  align-self: flex-start;
+.chat-message-sender {
+  flex-direction: row-reverse;
 }
 </style>
