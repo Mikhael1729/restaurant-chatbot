@@ -8,6 +8,8 @@
         Puedes escribirnos cualquier duda acerca de nuestro menú y servicios por
         medio de este chat.
       </p>
+
+      <!--<img src="../assets/plate.png" class="logo saturate" />-->
     </div>
     <div class="chat">
       <ChatHistory />
@@ -46,6 +48,10 @@ import ChatHistory from "./ChatHistory";
 
   .description {
   }
+
+  .logo {
+    width: 100px;
+  }
 }
 
 .chat {
@@ -55,7 +61,7 @@ import ChatHistory from "./ChatHistory";
   padding: 2em;
   border: 1px solid var(--text-color);
   border-radius: 2em;
-  background: var(--surface-a);
+  background: inherit;
 }
 </style>
 

@@ -1,20 +1,24 @@
 <template>
   <div class="input-section">
     <InputText v-model="message" class="input-message" />
-    <Button class="send-button">Enviar</Button>
+    <Button
+      label="Enviar"
+      class="send-button p-button p-button-outlined"
+      icon="pi pi-send"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
   data() {
     return {
-      message: ":3"
-    }
-  }
-})
+      message: ":3",
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -28,6 +32,14 @@ export default defineComponent({
   }
   .send-button {
     margin-left: 1em;
+
+    & > *:not(:last-child) {
+      margin-right: 1em;
+    }
+
+    & > * {
+      background: inherit;
+    }
   }
 }
 </style>
