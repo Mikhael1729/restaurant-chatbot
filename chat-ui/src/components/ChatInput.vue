@@ -25,7 +25,7 @@ export default defineComponent({
 .input-section {
   width: 100%;
   display: flex;
-  background: inherit;
+  padding: 0.5em;
 
   .input-message {
     width: 100%;

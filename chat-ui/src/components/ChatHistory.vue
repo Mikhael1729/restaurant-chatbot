@@ -24,10 +24,6 @@ export default defineComponent({
       messages: Message.mockData(),
     };
   },
-
-  mounted() {
-    console.log(this.$data.messages);
-  },
 });
 </script>
 
@@ -38,6 +34,8 @@ export default defineComponent({
   flex-direction: column;
   flex: 1;
   width: 100%;
+  overflow: auto;
+  padding: 1.5em;
 
   & > *:not(:last-child) {
     margin-bottom: 1em;

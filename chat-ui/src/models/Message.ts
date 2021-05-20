@@ -15,7 +15,7 @@ export default class Message {
 
   static mockData(): Message[] {
     const messages: Message[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 12; i++) {
       const isEven = i % 2 === 0;
       const type = !isEven ? "reciver" : "sender";
       const text = isEven ? "Hola, envío esto" : "Mi respuesta es: No >: 3";

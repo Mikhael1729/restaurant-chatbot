@@ -14,11 +14,11 @@ import ChatHistory from "./ChatHistory";
 .chat {
   display: flex;
   flex-direction: column;
-  padding: 2em;
+  padding: 0.5em;
   border: 1px solid var(--text-color);
   border-radius: 0.8em;
   background: var(--surface-a);
-  height: 100%;
+  max-height: calc(100vh - 6em);
 }
 </style>
 
