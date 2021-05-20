@@ -32,14 +32,6 @@ export default defineComponent({
   }
   .send-button {
     margin-left: 1em;
-
-    & > *:not(:last-child) {
-      margin-right: 1em;
-    }
-
-    & > * {
-      background: inherit;
-    }
   }
 }
 </style>

@@ -10,16 +10,6 @@ import InputSection from "./ChatInput";
 import ChatHistory from "./ChatHistory";
 </script>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  background-color: var(--surface-b);
-  font-family: var(--font-family);
-  color: var(--text-color);
-}
-</style>
-
 <style lang="scss" scoped>
 .container {
   display: flex;
