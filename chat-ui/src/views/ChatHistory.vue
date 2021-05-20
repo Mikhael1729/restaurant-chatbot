@@ -37,7 +37,10 @@ export default defineComponent({
   flex-direction: column;
   flex: 1;
   width: 100%;
-  background: green;
+
+  & > *:not(:last-child) {
+    margin-bottom: 1em;
+  }
 }
 </style>
 

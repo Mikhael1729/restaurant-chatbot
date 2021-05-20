@@ -1,7 +1,9 @@
 <template>
-  <div class="container">
-    <ChatHistory />
-    <InputSection />
+  <div class="p-grid">
+    <div class="container">
+      <ChatHistory />
+      <InputSection />
+    </div>
   </div>
 </template>
 
@@ -15,8 +17,8 @@ import ChatHistory from "./ChatHistory";
   height: 100vh;
   width: 100%;
   display: flex;
-  background: red;
   flex-direction: column;
+  padding: 3em;
 }
 </style>
 

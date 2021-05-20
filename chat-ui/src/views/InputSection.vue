@@ -1,7 +1,7 @@
 <template>
   <div class="input-section">
     <InputText v-model="message" class="input-message" />
-    <Button>Enviar</Button>
+    <Button class="send-button">Enviar</Button>
   </div>
 </template>
 
@@ -19,12 +19,14 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .input-section {
-  background: yellow;
   width: 100%;
   display: flex;
 
   .input-message {
     width: 100%;
+  }
+  .send-button {
+    margin-left: 1em;
   }
 }
 </style>

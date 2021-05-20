@@ -1,6 +1,6 @@
 <template>
   <!--<div id="nav">-->
-    <!--<router-link to="/about">About</router-link>-->
+  <!--<router-link to="/about">About</router-link>-->
   <!--</div>-->
   <router-view />
 </template>
@@ -9,5 +9,9 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: Ubuntu;
+  background-color: var(--surface-b);
+  font-family: var(--font-family);
+  color: var(--text-color);
 }
 </style>
