@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <div class="chat">
-    </div>
-    <div class="input-section">
-      <InputText v-model="message" />
-      <Button>Hey</Button>
-    </div>
+    <ChatHistory />
+    <InputSection />
   </div>
 </template>
 
+<script setup>
+import InputSection from "./InputSection";
+import ChatHistory from "./ChatHistory";
+</script>
 
 <style lang="scss" scoped>
 .container {
@@ -17,20 +17,6 @@
   display: flex;
   background: red;
   flex-direction: column;
-
-  .input-section {
-    background: yellow;
-    width: 100%;
-  }
 }
 </style>
 
-<script>
-export default {
-  data() {
-    return {
-      message: ":O",
-    };
-  },
-};
-</script>
