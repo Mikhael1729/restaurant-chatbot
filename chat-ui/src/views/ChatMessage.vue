@@ -4,9 +4,9 @@
       <i
         v-if="type === 'reciver'"
         class="pi pi-android"
-        style="background: transparent"
+        style="background: inherit"
       />
-      <i v-else class="pi pi-user" style="background: transparent" />
+      <i v-else class="pi pi-user" style="background: inherit" />
     </Avatar>
     <div class="message">
       <p class="text">
@@ -35,15 +35,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.end-aligned {
-  align-self: flex-end;
-}
-
-.start-aligned {
-  align-self: flex-start;
-}
-
 .chat-message {
+  background: inherit;
   display: flex;
 
   & > *:not(:last-child) {
@@ -62,15 +55,25 @@ export default defineComponent({
     border: 1px solid black;
     border-color: var(--text-color-secondary);
     color: var(--text-color);
+    background: inherit;
 
     .text {
       margin-bottom: 0.5em;
+      background: inherit;
     }
     .date {
       text-align: right;
       font-size: 0.8em;
       color: var(--surface-900);
+      background: inherit;
     }
   }
+}
+.end-aligned {
+  align-self: flex-end;
+}
+
+.start-aligned {
+  align-self: flex-start;
 }
 </style>

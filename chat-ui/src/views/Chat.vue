@@ -1,6 +1,15 @@
 <template>
-  <div class="p-grid">
-    <div class="container">
+  <div class="container">
+    <div class="title-description">
+      <h1 class="title">Restaurante Determinado</h1>
+
+      <br />
+      <p class="description">
+        Puedes escribirnos cualquier duda acerca de nuestro menú y servicios por
+        medio de este chat.
+      </p>
+    </div>
+    <div class="chat">
       <ChatHistory />
       <InputSection />
     </div>
@@ -14,12 +23,39 @@ import ChatHistory from "./ChatHistory";
 
 <style lang="scss" scoped>
 .container {
-  margin: 0 auto;
+  display: flex;
+  padding: 3em;
   height: 100vh;
-  max-width: 80%;
+
+  & > *:not(:last-child) {
+    margin-right: 3em;
+  }
+}
+
+.title-description {
   display: flex;
   flex-direction: column;
-  padding: 3em;
+  border-radius: 0.5em;
+  padding: 2em;
+  color: red;
+  width: 20%;
+
+  .title {
+    color: var(--primary-color);
+  }
+
+  .description {
+  }
+}
+
+.chat {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2em;
+  border: 1px solid var(--text-color);
+  border-radius: 2em;
+  background: var(--surface-a);
 }
 </style>
 

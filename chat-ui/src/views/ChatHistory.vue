@@ -33,6 +33,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .chat-history {
+  background: inherit;
   display: flex;
   flex-direction: column;
   flex: 1;
