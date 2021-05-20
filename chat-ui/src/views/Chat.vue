@@ -1,15 +1,14 @@
 <template>
   <div class="container">
     <div class="title-description">
-      <h1 class="title">Restaurante Determinado</h1>
+      <h1 class="title">Restaurante<br />Chat</h1>
 
-      <br />
       <p class="description">
-        Puedes escribirnos cualquier duda acerca de nuestro menú y servicios por
-        medio de este chat.
+        <i>
+          Puedes escribirnos cualquier duda acerca de nuestros servicios
+          por medio de este chat
+        </i>
       </p>
-
-      <!--<img src="../assets/plate.png" class="logo saturate" />-->
     </div>
     <div class="chat">
       <ChatHistory />
@@ -40,17 +39,22 @@ import ChatHistory from "./ChatHistory";
   border-radius: 0.5em;
   padding: 2em;
   color: red;
-  width: 20%;
+  width: 30%;
 
   .title {
-    color: var(--primary-color);
+    color: #dbdbdb;
   }
 
   .description {
+    flex: 1;
+    margin-top: 1em;
+    font-size: 0.8em;
+    line-height: 170%;
   }
 
   .logo {
-    width: 100px;
+    width: 80px;
+    align-self: center;
   }
 }
 
@@ -60,8 +64,8 @@ import ChatHistory from "./ChatHistory";
   flex-direction: column;
   padding: 2em;
   border: 1px solid var(--text-color);
-  border-radius: 2em;
-  background: inherit;
+  border-radius: 0.8em;
+  background: var(--surface-a);
 }
 </style>
 
