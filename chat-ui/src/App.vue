@@ -1,9 +1,9 @@
 <template>
-  <div class="container p-grid">
-    <div class="title-description p-col-12 p-lg-3">
+  <div class="p-grid">
+    <div class="p-col-12 p-lg-3">
       <TitleDescription />
     </div>
-    <div class="chat p-col-12 p-lg-9">
+    <div class="p-col-12 p-lg-9">
       <Chat />
     </div>
   </div>
@@ -19,19 +19,12 @@ import TitleDescription from "./components/TitleDescription";
   font-family: var(--font-family);
   color: var(--text-color);
 }
-</style>
 
-<style lang="scss" scoped>
-.container {
+body {
+  margin: 0px;
   background-color: var(--surface-b);
   padding: 3em;
-  min-height: 100vh;
-
-  .title-description {
-    color: red;
-  }
-
-  .chat {
-  }
+  height: 100vh;
+  width: 100%;
 }
 </style>
