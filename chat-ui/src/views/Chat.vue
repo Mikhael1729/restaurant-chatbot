@@ -14,8 +14,9 @@ import ChatHistory from "./ChatHistory";
 
 <style lang="scss" scoped>
 .container {
+  margin: 0 auto;
   height: 100vh;
-  width: 100%;
+  max-width: 80%;
   display: flex;
   flex-direction: column;
   padding: 3em;

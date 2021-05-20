@@ -17,7 +17,7 @@ export default class Message {
     const messages: Message[] = [];
     for (let i = 0; i < 6; i++) {
       const isEven = i % 2 === 0;
-      const type = isEven ? "reciver" : "sender";
+      const type = !isEven ? "reciver" : "sender";
       const text = isEven ? "Hola, envío esto" : "Mi respuesta es: No >: 3";
 
       messages.push({ id: `$m-{i}`, text, type, date: new Date(Date.now()) });

@@ -1,6 +1,13 @@
 <template>
-  <div class="chat-message">
-    <Avatar label="P" shape="circle" size="small" class="avatar" />
+  <div :class="{ 'chat-message': true, 'end-aligned': type === 'sender' }">
+    <Avatar shape="circle" size="small" class="avatar">
+      <i
+        v-if="type === 'reciver'"
+        class="pi pi-android"
+        style="background: transparent"
+      />
+      <i v-else class="pi pi-user" style="background: transparent" />
+    </Avatar>
     <div class="message">
       <p class="text">
         {{ text }}
@@ -28,6 +35,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.end-aligned {
+  align-self: flex-end;
+}
+
+.start-aligned {
+  align-self: flex-start;
+}
+
 .chat-message {
   display: flex;
 
