@@ -15,10 +15,6 @@
 .title-description {
   display: flex;
   flex-direction: column;
-  border-radius: 0.5em;
-  padding: 2em;
-  color: red;
-  width: 30%;
 
   .title {
     color: #dbdbdb;

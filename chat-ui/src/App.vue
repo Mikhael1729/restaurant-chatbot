@@ -1,19 +1,21 @@
 <template>
-  <div class="container">
-    <TitleDescription />
-    <Chat />
+  <div class="container p-grid">
+    <div class="title-description p-col-12 p-lg-3">
+      <TitleDescription />
+    </div>
+    <div class="chat p-col-12 p-lg-9">
+      <Chat />
+    </div>
   </div>
 </template>
 
 <script setup>
-import Chat from "./components/Chat"
+import Chat from "./components/Chat";
 import TitleDescription from "./components/TitleDescription";
 </script>
 
 <style>
 * {
-  margin: 0;
-  padding: 0;
   font-family: var(--font-family);
   color: var(--text-color);
 }
@@ -21,13 +23,15 @@ import TitleDescription from "./components/TitleDescription";
 
 <style lang="scss" scoped>
 .container {
-  display: flex;
+  background-color: var(--surface-b);
   padding: 3em;
   height: 100vh;
-  background-color: var(--surface-b);
 
-  & > *:not(:last-child) {
-    margin-right: 3em;
+  .title-description {
+    color: red;
+  }
+
+  .chat {
   }
 }
 </style>

@@ -10,6 +10,7 @@ import Card from "primevue/card"
 import "primevue/resources/themes/bootstrap4-dark-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
+import 'primeflex/primeflex.css';
 
 createApp(App)
   // Plugins.

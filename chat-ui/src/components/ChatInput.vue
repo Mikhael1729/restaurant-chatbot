@@ -3,7 +3,7 @@
     <InputText v-model="message" class="input-message" />
     <Button
       label="Enviar"
-      class="send-button p-button p-button-outlined"
+      class="send-button p-button-outlined"
       icon="pi pi-send"
     />
   </div>
