@@ -6,18 +6,18 @@ import (
 	"time"
 )
 
-type Sender bool
+type Sender int
 
 const (
-	Customer = true
-	Bot      = false
+	Customer = 0
+	Bot      = 1
 )
 
 // Message represent a text message between a customer of the restaurant and the bot.
 type Message struct {
 	Id       int       `json:"id"`
 	Text     string    `json:"text"`
-	Sender   bool      `json:"sender,string"` // If true the sender is the human, otherwise the bot.
+	Sender   Sender    `json:"sender"` // If true the sender is the human, otherwise the bot.
 	DateTime time.Time `json:"dateTime"`
 }
 
