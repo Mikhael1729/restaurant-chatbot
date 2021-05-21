@@ -1,6 +1,7 @@
 <template>
   <div class="title-description">
-    <h1 class="title">Restaurante<br />Chat</h1>
+    <img src="../assets/logo.png"/>
+    <h1>Tecnorestaurant</h1>
 
     <p>
       <i>
@@ -15,15 +16,25 @@
 .title-description {
   display: flex;
   flex-direction: column;
+  height: fit-content;
+  align-self: center;
+  border: 1px solid var(--text-color);
+  border-radius: 0.8em;
+  text-align: center;
+  align-items: center;
 
-  .title {
+  img {
+    width: 80px;
+  }
+
+  h1 {
     color: #dbdbdb;
+    font-size: 2.5em;
   }
 
   p {
-    flex: 1;
     margin-top: 0.5em;
-    font-size: 0.8em;
+    font-size: 1.2em;
     line-height: 170%;
   }
 }

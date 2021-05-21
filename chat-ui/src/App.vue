@@ -1,9 +1,9 @@
 <template>
   <div class="p-grid">
-    <div class="p-col-12 p-lg-3">
+    <div class="title-description p-col-12 p-lg-4">
       <TitleDescription />
     </div>
-    <div class="p-col-12 p-lg-9">
+    <div class="p-col-12 p-lg-8">
       <Chat />
     </div>
   </div>
@@ -23,8 +23,16 @@ import TitleDescription from "./components/TitleDescription";
 body {
   margin: 0px;
   background-color: var(--surface-b);
+  
   padding: 3em;
   height: 100vh;
   width: 100%;
+}
+</style>
+
+<style lang="scss" scoped>
+.title-description {
+  display: flex;
+  padding: 3em;
 }
 </style>
