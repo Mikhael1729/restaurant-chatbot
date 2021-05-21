@@ -1,5 +1,6 @@
 <template>
-  <div class="chat-history">
+  <div class="chat-history" :class="{ 'empty-chat-history': isEmpty() }">
+    <div v-if="isEmpty()" class="is-empty">Historial vacío</div>
     <template v-for="message in messages" :key="message.id">
       <ChatMessage
         :date="message.dateTime"
@@ -31,6 +32,11 @@ export default defineComponent({
         this.messages = data;
       });
   },
+  methods: {
+    isEmpty: function () {
+      return this.messages.length === 0;
+    },
+  },
 });
 </script>
 
@@ -38,7 +44,8 @@ export default defineComponent({
 .chat-history {
   background: inherit;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
+  justify-content: flex-end;
   flex: 1;
   width: 100%;
   overflow: auto;
@@ -46,6 +53,14 @@ export default defineComponent({
 
   & > *:not(:last-child) {
     margin-bottom: 1em;
+  }
+}
+.empty-chat-history {
+  align-items: center;
+  justify-content: center;
+
+  .is-empty {
+    font-style: italic;
   }
 }
 </style>

@@ -11,7 +11,7 @@
       :class="{ avatar: true, 'avatar-sender': isCustomer() }"
     >
       <i
-        v-if="isCustomer()"
+        v-if="!isCustomer()"
         class="pi pi-android"
         style="background: inherit"
       />
@@ -85,6 +85,7 @@ export default defineComponent({
       margin-bottom: 0.5em;
       background: inherit;
     }
+
     span {
       text-align: right;
       font-size: 0.8em;
@@ -94,6 +95,7 @@ export default defineComponent({
   }
 }
 
+/* It's used to align the message at the end of the row in the case the sender is a customer */
 .chat-message-sender {
   flex-direction: row-reverse;
 }

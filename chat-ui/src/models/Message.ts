@@ -1,6 +1,6 @@
 export enum Sender {
-  Customer = 1,
-  Bot = 0,
+  Customer = 0,
+  Bot = 1,
 }
 
 export default class Message {
