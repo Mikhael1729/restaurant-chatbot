@@ -5,6 +5,7 @@
       label="Enviar"
       class="send-button p-button-outlined"
       icon="pi pi-send"
+      v-on:click="sendMessage"
     />
   </div>
 </template>
@@ -15,8 +16,25 @@ import { defineComponent } from "vue";
 export default defineComponent({
   data() {
     return {
-      message: ":3",
+      message: "",
     };
+  },
+  methods: {
+    sendMessage: async function () {
+      console.log(this.message);
+      const response = await fetch("http://localhost:9090/messages", {
+        method: "POST",
+        mode: "no-cors", // no-cors, *cors, same-origin
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify({ text: this.message }),
+      });
+
+      console.log(response);
+    },
   },
 });
 </script>
