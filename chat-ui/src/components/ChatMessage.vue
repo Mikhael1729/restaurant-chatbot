@@ -1,14 +1,17 @@
 <template>
   <div
-    :class="{ 'chat-message': true, 'chat-message-sender': type === 'sender' }"
+    :class="{
+      'chat-message': true,
+      'chat-message-sender': isCustomer(),
+    }"
   >
     <Avatar
       shape="circle"
       size="small"
-      :class="{ avatar: true, 'avatar-sender': type === 'sender' }"
+      :class="{ avatar: true, 'avatar-sender': isCustomer() }"
     >
       <i
-        v-if="type === 'reciver'"
+        v-if="isCustomer()"
         class="pi pi-android"
         style="background: inherit"
       />
@@ -18,24 +21,37 @@
       <p>
         {{ text }}
       </p>
-      <span>{{ stringDate }}</span>
+      <span>{{ messageDate() }}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
+import { Sender } from "../models/Message";
 
 export default defineComponent({
   props: {
     text: String,
-    date: Date,
-    type: Object as PropType<"reciver" | "sender">,
+    date: String,
+    sender: Number,
   },
-  data() {
-    return {
-      stringDate: "hace 5 minutos",
-    };
+  methods: {
+    isCustomer: function () {
+      return this.sender === Sender.Customer;
+    },
+    messageDate: function () {
+      const parts = this.date?.split("T");
+
+      if (parts?.length !== 2) return "";
+
+      const date = parts[0];
+      const timeInfo = parts[1]?.split(".");
+      const timeParts = timeInfo[0].split(":");
+      const time = `${timeParts[0]}:${timeParts[1]}`;
+
+      return `${date}  ${time}`;
+    },
   },
 });
 </script>

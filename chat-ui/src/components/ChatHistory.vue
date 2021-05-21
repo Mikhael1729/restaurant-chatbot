@@ -2,9 +2,9 @@
   <div class="chat-history">
     <template v-for="message in messages" :key="message.id">
       <ChatMessage
-        :date="message.date"
+        :date="message.dateTime"
         :text="message.text"
-        :type="message.type"
+        :sender="message.sender"
       />
     </template>
   </div>
@@ -13,7 +13,7 @@
 <script lang="ts">
 import ChatMessage from "./ChatMessage.vue";
 import Message from "../models/Message";
-import { defineComponent, PropType } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   components: {
@@ -21,8 +21,15 @@ export default defineComponent({
   },
   data() {
     return {
-      messages: Message.mockData(),
+      messages: [] as Message[],
     };
+  },
+  mounted() {
+    fetch("http://localhost:9090/messages")
+      .then((res) => res.json())
+      .then((data: Message[]) => {
+        this.messages = data;
+      });
   },
 });
 </script>
