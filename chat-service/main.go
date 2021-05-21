@@ -21,13 +21,17 @@ func main() {
 func initializeServer() {
 	// Define the logger for the handlers.
 	logger := log.New(os.Stdout, "chat-service", log.LstdFlags) // chat-serviceYYY/MM/dd 00:00:00 <message>
-	handler := http.NewServeMux()
-	handler.Handle("/chat", handlers.NewChat(logger))
+
+	// Create the handlers.
+	messagesHandler := handlers.NewMessages(logger)
+
+	serveMux := http.NewServeMux()
+	serveMux.Handle("/messages", messagesHandler)
 
 	// Create my own server.
 	server := &http.Server{
 		Addr:         ":9090",
-		Handler:      handler,
+		Handler:      serveMux,
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,

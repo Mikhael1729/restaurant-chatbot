@@ -10,16 +10,10 @@ The chatbot service for the restaurant.
 go run main.go
 ```
 
-**Test the chat endpoint:**
+**Test the `messages` endpoint:**
 
 ```bash
-curl localhost:9090/chat
-```
-
-**Pass data to the chat endpoint:**
-
-```bash
-curl -d '{message: "Buenas"}' localhost:9090/chat
+curl localhost:9090/messages | jq
 ```
 
 You can add the flag `-v` to the two previous commands to see more information
