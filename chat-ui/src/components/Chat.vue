@@ -18,7 +18,5 @@ import ChatHistory from "./ChatHistory";
   border: 1px solid var(--text-color);
   border-radius: 0.8em;
   background: var(--surface-a);
-  min-height: calc(100vh - 6em);
 }
 </style>
-

@@ -1,6 +1,6 @@
 <template>
   <div class="title-description">
-    <img src="../assets/logo.png"/>
+    <img src="../assets/logo.png" />
     <h1>Tecnorestaurant</h1>
 
     <p>
@@ -16,12 +16,14 @@
 .title-description {
   display: flex;
   flex-direction: column;
-  height: fit-content;
-  align-self: center;
   border: 1px solid var(--text-color);
   border-radius: 0.8em;
   text-align: center;
   align-items: center;
+  height: fit-content;
+  max-width: 25rem;
+  padding: 2em;
+  align-self: center;
 
   img {
     width: 80px;

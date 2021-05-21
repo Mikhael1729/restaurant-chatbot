@@ -29,4 +29,3 @@ export default class Message {
     return messages;
   }
 }
-
