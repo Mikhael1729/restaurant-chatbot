@@ -1,52 +1,62 @@
 package main
 
 import (
-  "fmt"
-  "io/ioutil"
-  "strings"
+	"context"
+	"fmt"
+	"github.com/Mikhael1729/restaurant-chatbot/handlers"
+	"github.com/Mikhael1729/restaurant-chatbot/helpers"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
 )
 
 func main() {
-  fmt.Println("This is my chatbot :\"P\n---")
-
-  trainingData := extractTrainingResponses("./training_data/chats")
-  fmt.Println(trainingData)
+	//useTrainingData()
+	initializeServer()
 }
 
-func extractTrainingResponses(filename string) map[string][]string {
-  file_data, err := ioutil.ReadFile(filename)
+// initializeServer creates a server with the handlers of the app.
+func initializeServer() {
+	// Define the logger for the handlers.
+	logger := log.New(os.Stdout, "chat-service", log.LstdFlags) // chat-serviceYYY/MM/dd 00:00:00 <message>
+	handler := http.NewServeMux()
+	handler.Handle("/chat", handlers.NewChat(logger))
 
-  if err != nil {
-    panic(err)
-  }
+	// Create my own server.
+	server := &http.Server{
+		Addr:         ":9090",
+		Handler:      handler,
+		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  1 * time.Second,
+		WriteTimeout: 1 * time.Second,
+	}
 
-  // Stores the messages grouped by category.
-  grouped := make(map[string][]string)
+	// Not block the code execution by using a go routine.
+	go func() {
+		err := server.ListenAndServe()
+		logger.Fatal(err)
+	}()
 
-  // Remove null characters.
-  text := strings.Replace(string(file_data), "\x00", "", -1)
+	// Use the os.Signal to avoid stopping server at the instant until a certain
+	// signals are executed.
+	sigChan := make(chan os.Signal)
+	signal.Notify(sigChan, os.Interrupt)
+	signal.Notify(sigChan, os.Kill)
 
-  // Separate the responses.
-  all_responses := strings.Split(text, "#")
+	// Block until the signal is recived
+	sig := <-sigChan
+	logger.Println("Yo have terminated the server", sig)
 
-  // Group messages into categories.
-  for _, response := range all_responses {
-    parts := strings.Split(response, "(")
-
-    if len(parts) <= 1 {
-      continue
-    }
-
-    message := parts[0]
-    category := parts[1][:len(parts[1])-1]
-
-    if grouped[category] == nil {
-      grouped[category] = []string{message}
-    } else {
-      grouped[category] = append(grouped[category], message)
-    }
-  }
-
-  return grouped
+	// Close the server. It doesn't accept more requests and finish current work.
+	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	server.Shutdown(timeoutContext)
 }
 
+// useTrainingData extracts the training data and shows it in the console.
+func useTrainingData() {
+	trainingData := helpers.ExtractTrainingResponses("./training_data/chats")
+	fmt.Println(trainingData)
+
+}
