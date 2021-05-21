@@ -31,6 +31,8 @@ func GetMessages() Messages {
 // AddMessage adds a new Message to the database.
 func AddMessage(message *Message) {
 	message.Id = generateId()
+	message.Sender = Customer
+	message.DateTime = time.Now()
 	mockMessages = append(mockMessages, message)
 }
 

@@ -25,11 +25,9 @@ export default defineComponent({
       const response = await fetch("http://localhost:9090/messages", {
         method: "POST",
         mode: "no-cors", // no-cors, *cors, same-origin
-        cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
         },
-        referrerPolicy: "no-referrer",
         body: JSON.stringify({ text: this.message }),
       });
 

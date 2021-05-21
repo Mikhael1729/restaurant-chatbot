@@ -40,7 +40,7 @@ func (m *Messages) getMessages(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// getMessages process the POST method for the handler
+// addMessages process the POST method for the handler
 func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 	message := &models.Message{}
 
@@ -51,6 +51,8 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	models.AddMessage(message)
+
+	rw.WriteHeader(http.StatusOK)
 }
 
 func setupCors(rw http.ResponseWriter, req *http.Request) {
