@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
-	"github.com/Mikhael1729/restaurant-chatbot/helpers"
 	"log"
 	"net/http"
 	"os"
@@ -13,8 +13,8 @@ import (
 )
 
 func main() {
-	//useTrainingData()
-	initializeServer()
+	useTrainingData()
+	//initializeServer()
 }
 
 // initializeServer creates a server with the handlers of the app.
@@ -60,7 +60,7 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	trainingData := helpers.ExtractTrainingResponses("./training_data/chats")
+	trainingData := ann.ExtractTrainingResponses("./training_data/chats")
 	fmt.Println(trainingData)
 
 }
