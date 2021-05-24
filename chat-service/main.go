@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/Mikhael1729/restaurant-chatbot/ann"
+	//"fmt"
+	//"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
 	"net/http"
@@ -60,7 +60,7 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	trainingData := ann.ExtractTrainingResponses("./training_data/chats")
-	fmt.Println(trainingData)
+	//trainingData := ann.ExtractTrainingResponses("./training_data/chats")
+	//fmt.Println(trainingData)
 
 }
