@@ -17,10 +17,12 @@ func TestNormalizeWord(t *testing.T) {
 	}
 }
 
-func TestTokenizeSentence(t *testing.T) {
+// TestTokenizeAndSteamText calls ann.tokenizeAndSteamText with a sentence, checking for a valid
+// spanish stemmed and tokenized text.
+func TestTokenizeAndSteamText(t *testing.T) {
 	sentence := "Buenos días, ¿cómo se encuentra?"
-	sentenceWords := tokenizeSentence(sentence)
-	expected := []string{"Buenos", "días", ",", "¿cómo", "se", "encuentra", "?"}
+	sentenceWords := tokenizeAndSteamText(sentence)
+	expected := []string{"buen", "dias", ",", "¿com", "se", "encuentr", "?"}
 
 	for i := 0; i < len(expected); i++ {
 		predictedWord := sentenceWords[i]

@@ -16,9 +16,17 @@ func normalizeWord(word string) string {
 	return word
 }
 
-func tokenizeSentence(sentence string) []string {
+// tokenizeAndSteamSentence takes a text and return the tokenized and stemmed
+// words of that given text
+func tokenizeAndSteamText(sentence string) []string {
 	tokenizer := tokenize.NewTreebankWordTokenizer()
 	sentenceWords := tokenizer.Tokenize(sentence)
+
+	// Stem the words in sentenceWords.
+	for i := 0; i < len(sentenceWords); i++ {
+		stemmedWord := normalizeWord(sentenceWords[i])
+		sentenceWords[i] = stemmedWord
+	}
 
 	return sentenceWords
 }
