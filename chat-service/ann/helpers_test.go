@@ -1,6 +1,7 @@
 package ann
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -26,7 +27,7 @@ func TestTokenizeSentence(t *testing.T) {
 		expectedWord := expected[i]
 
 		if predictedWord != expectedWord {
-			t.Fatalf(`Expected %v, got %v`, expected, sentenceWords)
+			t.Fatalf(`Expected "%v", got "%v" at position %v`, expectedWord, predictedWord, strconv.Itoa(i))
 		}
 	}
 }
