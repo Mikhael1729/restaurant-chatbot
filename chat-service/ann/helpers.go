@@ -1,8 +1,8 @@
 package ann
 
 import (
+	"github.com/jdkato/prose/tokenize"
 	"github.com/kljensen/snowball"
-	"gopkg.in/neurosnap/sentences.v1/english"
 )
 
 // normalizeWord stem the given word.
@@ -17,18 +17,8 @@ func normalizeWord(word string) string {
 }
 
 func tokenizeSentence(sentence string) []string {
-	tokenizer, err := english.NewSentenceTokenizer(nil)
-
-	if err != nil {
-		panic(err)
-	}
-
-	tokenizedWords := tokenizer.Tokenize(sentence)
-	sentenceWords := []string{}
-
-	for _, token := range tokenizedWords {
-		sentenceWords = append(sentenceWords, token.Text)
-	}
+	tokenizer := tokenize.NewTreebankWordTokenizer()
+	sentenceWords := tokenizer.Tokenize(sentence)
 
 	return sentenceWords
 }
