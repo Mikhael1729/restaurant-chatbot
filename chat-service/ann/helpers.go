@@ -1,7 +1,6 @@
 package ann
 
 import (
-	"fmt"
 	"github.com/jdkato/prose/tokenize"
 	"github.com/kljensen/snowball"
 	"io/ioutil"

@@ -60,8 +60,10 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	X, Y := ann.GenerateDevTrainingExamples("./training_data/chats")
+	//X, Y := ann.GenerateDevTrainingExamples("./training_data/chats")
 
-	fmt.Println(X)
-	fmt.Println(len(Y))
+	//fmt.Println(X)
+	//fmt.Println(len(Y))
+	network := ann.NewAnn(2, 3, 1)
+	fmt.Println(network.W1)
 }
