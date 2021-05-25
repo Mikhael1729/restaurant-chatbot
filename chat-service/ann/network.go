@@ -35,13 +35,12 @@ func Initialize(n0 int, n1 int, n2 int) *Parameters {
 	return &Parameters{W1, b1, W2, b2, Dimensions{n0, n1, n2}}
 }
 
-func (p *Parameters) ForwardPropagation(X mat.Matrix) mat.Matrix {
+func (p *Parameters) ForwardPropagation(X mat.Matrix) *Forward {
 	Z1 := Add(Dot(p.W1, X), p.B1)
-	//A1 := Apply(Relu, Z1)
+	A1 := Apply(Relu, Z1)
 
-	//Z2 := Add(Dot(p.W2, A1), p.B2)
-	//A2 := Apply(Softmax(Z2), Z2)
+	Z2 := Add(Dot(p.W2, A1), p.B2)
+	A2 := Apply(Softmax(Z2), Z2)
 
-	//return &Forward{Z1, A1, Z2, A2}
-	return Z1
+	return &Forward{Z1, A1, Z2, A2}
 }

@@ -72,12 +72,16 @@ func useTrainingData() {
 	//forward := parameters.ForwardPropagation(x)
 	//fmt.Println(forward)
 
-	data := []float64{2.0, 2.0, 2.0, 2.0}
-	A := mat.NewDense(4, 1, data)
-	B := ann.Broadcast(A, 3, 2)
+	//data := []float64{2.0, 2.0, 2.0, 2.0}
+	//A := mat.NewDense(4, 1, data)
+	//B := ann.Broadcast(A, 3, 2)
 
 	// 4 x 1 ---> 4 x 4, repate the columns
 	// 1 x 4 ---> 4 x 4, repate the rows
+	W1 := mat.NewDense(2, 2, []float64{2, 2, 2, 2})
+	X := mat.NewDense(2, 2, []float64{1, 1, 1, 1})
+	B1 := mat.NewDense(2, 1, []float64{1, 1})
+	Z1 := ann.Add(ann.Dot(W1, X), B1)
 
-	fmt.Println(B)
+	fmt.Println(Z1)
 }

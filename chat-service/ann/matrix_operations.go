@@ -44,9 +44,17 @@ func GenerateOnes(rows int, columns int) []float64 {
 // add sum the matrix1 with the matrix2 and returns the result.
 func Add(matrix1, matrix2 mat.Matrix) mat.Matrix {
 	rows, columns := matrix1.Dims()
+	rows2, columns2 := matrix2.Dims()
 
 	resultMatrix := mat.NewDense(rows, columns, nil)
-	resultMatrix.Add(matrix1, matrix2)
+
+	if rows*columns > rows2*columns2 {
+		resultMatrix.Add(matrix1, Broadcast(matrix2, rows, columns))
+	} else if rows*columns == rows2*columns2 {
+		resultMatrix.Add(matrix1, matrix2)
+	} else {
+		resultMatrix.Add(Broadcast(matrix1, rows2, columns2), matrix2)
+	}
 
 	return resultMatrix
 }
