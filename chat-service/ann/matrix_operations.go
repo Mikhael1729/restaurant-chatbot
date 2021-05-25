@@ -59,13 +59,6 @@ func Add(matrix1, matrix2 mat.Matrix) mat.Matrix {
 	return resultMatrix
 }
 
-func Reshape(matrix mat.Matrix, rows int, columns int) mat.Matrix {
-	matrixData := matrix.(*mat.Dense).RawMatrix().Data
-	reshaped := mat.NewDense(rows, columns, matrixData)
-
-	return reshaped
-}
-
 func Broadcast(matrix mat.Matrix, rows int, columns int) mat.Matrix {
 	dense := matrix.(*mat.Dense)
 	prevRows, prevColumns := dense.Dims()
@@ -87,11 +80,7 @@ func Broadcast(matrix mat.Matrix, rows int, columns int) mat.Matrix {
 	return mat.NewDense(rows, columns, data)
 }
 
-//func Reshape(matrix mat.Matrix, rows int, columns int) mat.Matrix {
-//reshaped := mat.NewDense(rows, columns, matrix as )
-//}
-
-// dot Multiply mat
+// Dot Multiply mat
 func Dot(matrix1, matrix2 mat.Matrix) mat.Matrix {
 	rows, _ := matrix1.Dims()
 	_, columns := matrix2.Dims()
