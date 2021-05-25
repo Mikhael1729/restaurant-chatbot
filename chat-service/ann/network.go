@@ -6,10 +6,12 @@ import (
 )
 
 type Ann struct {
+	// Forward variables
 	W1 mat.Dense
 	B1 mat.Dense
 	W2 mat.Dense
 	B2 mat.Dense
+	// Backward variables
 }
 
 func NewAnn(n0 int, n1 int, n2 int) *Ann {
@@ -20,6 +22,24 @@ func NewAnn(n0 int, n1 int, n2 int) *Ann {
 	b2 := mat.NewDense(n2, 1, nil)
 
 	return &Ann{*W1, *b1, *W2, *b2}
+}
+
+func (network *Ann) Forward(X mat.Dense) {
+	//Z1 :=
+	// TODO:
+}
+
+// Helper functions.
+func applyRelu(i, j int, number float64) float64 {
+	return relu(number)
+}
+
+func relu(z float64) float64 {
+	if z > 0.00 {
+		return z
+	} else {
+		return 0.00
+	}
 }
 
 func generateRandNorm(r int, c int, multiplier float64) []float64 {

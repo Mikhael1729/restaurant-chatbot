@@ -64,6 +64,6 @@ func useTrainingData() {
 
 	//fmt.Println(X)
 	//fmt.Println(len(Y))
-	network := ann.NewAnn(2, 3, 1)
-	fmt.Println(network.W1)
+	neuralNet := ann.NewAnn(2, 3, 1)
+	fmt.Println(neuralNet.W1)
 }
