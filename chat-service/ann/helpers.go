@@ -56,6 +56,8 @@ func ExtractData(dataPath string) *ExtractedData {
 		Y:             []string{},
 	}
 
+	ignoredStrings := []string{"¿", "?"}
+
 	for _, example := range examples {
 		parts := strings.Split(example, "(")
 		category := parts[1][:len(parts[1])-1]
@@ -68,7 +70,10 @@ func ExtractData(dataPath string) *ExtractedData {
 
 		// Store each new sentence word into inputOptions.
 		for _, word := range sentenceWords {
-			data.InputOptions[word] = true
+			isIgnored := exists(ignoredStrings, word)
+			if !isIgnored {
+				data.InputOptions[word] = true
+			}
 		}
 
 		// Store a new category class into outputOptions
