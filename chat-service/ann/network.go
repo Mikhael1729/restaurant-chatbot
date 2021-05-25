@@ -2,52 +2,46 @@ package ann
 
 import (
 	"gonum.org/v1/gonum/mat"
-	"math/rand"
 )
 
-type Ann struct {
-	// Forward variables
-	W1 mat.Dense
-	B1 mat.Dense
-	W2 mat.Dense
-	B2 mat.Dense
-	// Backward variables
+type Dimensions struct {
+	N0 int
+	N1 int
+	N2 int
 }
 
-func NewAnn(n0 int, n1 int, n2 int) *Ann {
-	W1 := mat.NewDense(n1, n0, generateRandNorm(n1, n0, 0.01))
+type Parameters struct {
+	W1         mat.Matrix
+	B1         mat.Matrix
+	W2         mat.Matrix
+	B2         mat.Matrix
+	Dimensions Dimensions
+}
+
+type Forward struct {
+	Z1 mat.Matrix
+	A1 mat.Matrix
+	Z2 mat.Matrix
+	A2 mat.Matrix
+}
+
+func Initialize(n0 int, n1 int, n2 int) *Parameters {
+	W1 := mat.NewDense(n1, n0, GenerateRandNorm(n1, n0, 0.01))
 	b1 := mat.NewDense(n1, 1, nil)
 
-	W2 := mat.NewDense(n2, n1, generateRandNorm(n2, n1, 0.01))
+	W2 := mat.NewDense(n2, n1, GenerateRandNorm(n2, n1, 0.01))
 	b2 := mat.NewDense(n2, 1, nil)
 
-	return &Ann{*W1, *b1, *W2, *b2}
+	return &Parameters{W1, b1, W2, b2, Dimensions{n0, n1, n2}}
 }
 
-func (network *Ann) Forward(X mat.Dense) {
-	//Z1 :=
-	// TODO:
-}
+func (p *Parameters) ForwardPropagation(X mat.Matrix) mat.Matrix {
+	Z1 := Add(Dot(p.W1, X), p.B1)
+	//A1 := Apply(Relu, Z1)
 
-// Helper functions.
-func applyRelu(i, j int, number float64) float64 {
-	return relu(number)
-}
+	//Z2 := Add(Dot(p.W2, A1), p.B2)
+	//A2 := Apply(Softmax(Z2), Z2)
 
-func relu(z float64) float64 {
-	if z > 0.00 {
-		return z
-	} else {
-		return 0.00
-	}
-}
-
-func generateRandNorm(r int, c int, multiplier float64) []float64 {
-	size := r * c
-	data := make([]float64, size)
-	for i := range data {
-		data[i] = rand.NormFloat64() * multiplier
-	}
-
-	return data
+	//return &Forward{Z1, A1, Z2, A2}
+	return Z1
 }

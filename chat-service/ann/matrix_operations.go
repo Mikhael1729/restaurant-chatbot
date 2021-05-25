@@ -1,6 +1,7 @@
 package ann
 
 import (
+	"errors"
 	"gonum.org/v1/gonum/mat"
 	"math/rand"
 )
@@ -49,6 +50,38 @@ func Add(matrix1, matrix2 mat.Matrix) mat.Matrix {
 
 	return resultMatrix
 }
+
+func Reshape(matrix mat.Matrix, rows int, columns int) mat.Matrix {
+	matrixData := matrix.(*mat.Dense).RawMatrix().Data
+	reshaped := mat.NewDense(rows, columns, matrixData)
+
+	return reshaped
+}
+
+func Broadcast(matrix mat.Matrix, rows int, columns int) mat.Matrix {
+	dense := matrix.(*mat.Dense)
+	prevRows, prevColumns := dense.Dims()
+
+	newDataSize := rows * columns
+	previousDataSize := prevRows * prevColumns
+
+	if newDataSize%previousDataSize != 0 {
+		panic(errors.New("The matrix couldn't be broadcasted"))
+	}
+
+	// Generate the apropiate amount of data for the new size
+	times := newDataSize / previousDataSize
+	data := dense.RawMatrix().Data
+	for i := 0; i < times-1; i++ {
+		data = append(data, data...)
+	}
+
+	return mat.NewDense(rows, columns, data)
+}
+
+//func Reshape(matrix mat.Matrix, rows int, columns int) mat.Matrix {
+//reshaped := mat.NewDense(rows, columns, matrix as )
+//}
 
 // dot Multiply mat
 func Dot(matrix1, matrix2 mat.Matrix) mat.Matrix {

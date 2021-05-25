@@ -6,6 +6,8 @@ import (
 	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
+	//"math/rand"
+	"gonum.org/v1/gonum/mat"
 	"net/http"
 	"os"
 	"os/signal"
@@ -64,6 +66,18 @@ func useTrainingData() {
 
 	//fmt.Println(X)
 	//fmt.Println(len(Y))
-	neuralNet := ann.NewAnn(2, 3, 1)
-	fmt.Println(neuralNet.W1)
+	//parameters := ann.Initialize(2, 3, 1)
+	//fmt.Println(parameters)
+	//x := mat.NewDense(parameters.Dimensions.N0, 4, ann.GenerateOnes(parameters.Dimensions.N0, 4))
+	//forward := parameters.ForwardPropagation(x)
+	//fmt.Println(forward)
+
+	data := []float64{2.0, 2.0, 2.0, 2.0}
+	A := mat.NewDense(4, 1, data)
+	B := ann.Broadcast(A, 3, 2)
+
+	// 4 x 1 ---> 4 x 4, repate the columns
+	// 1 x 4 ---> 4 x 4, repate the rows
+
+	fmt.Println(B)
 }
