@@ -1,6 +1,7 @@
 package ann
 
 import (
+	"fmt"
 	"github.com/jdkato/prose/tokenize"
 	"github.com/kljensen/snowball"
 	"io/ioutil"
@@ -75,4 +76,56 @@ func ExtractData(dataPath string) *ExtractedData {
 	}
 
 	return data
+}
+
+func GenerateDevTrainingExamples(dataPath string) ([][]int, []int) {
+	data := ExtractData(dataPath)
+	fmt.Println(data.InputOptions)
+
+	// Get a list of the output options. It'll be used to get the one-hot arrays.
+	outputOptions := make([]string, 0, len(data.OutputOptions))
+	for key := range data.OutputOptions {
+		outputOptions = append(outputOptions, key)
+	}
+
+	// Generate training X and Y.
+	trainExamples := [][]int{}
+	trainOutputs := []int{} //
+	for i := 0; i < len(data.X); i++ {
+		input := data.X[i]
+		output := data.Y[i]
+
+		// Add a new train example
+		trainExample := []int{}
+		for stemmedWord, _ := range data.InputOptions {
+			match := exists(input, stemmedWord)
+			if match {
+				trainExample = append(trainExample, 1)
+			} else {
+				trainExample = append(trainExample, 0)
+			}
+		}
+
+		trainExamples = append(trainExamples, trainExample)
+
+		// Add the index of the correct category of the current example.
+		for i, category := range outputOptions {
+			if category == output {
+				trainOutputs = append(trainOutputs, i)
+			}
+		}
+	}
+
+	return trainExamples, trainOutputs
+}
+
+// exists tells if a given string exists into the given string array.
+func exists(strList []string, word string) bool {
+	for _, element := range strList {
+		if element == word {
+			return true
+		}
+	}
+
+	return false
 }
