@@ -2,12 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
-	//"math/rand"
-	"gonum.org/v1/gonum/mat"
 	"net/http"
 	"os"
 	"os/signal"
@@ -62,26 +58,4 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	//X, Y := ann.GenerateDevTrainingExamples("./training_data/chats")
-
-	//fmt.Println(X)
-	//fmt.Println(len(Y))
-	//parameters := ann.Initialize(2, 3, 1)
-	//fmt.Println(parameters)
-	//x := mat.NewDense(parameters.Dimensions.N0, 4, ann.GenerateOnes(parameters.Dimensions.N0, 4))
-	//forward := parameters.ForwardPropagation(x)
-	//fmt.Println(forward)
-
-	//data := []float64{2.0, 2.0, 2.0, 2.0}
-	//A := mat.NewDense(4, 1, data)
-	//B := ann.Broadcast(A, 3, 2)
-
-	// 4 x 1 ---> 4 x 4, repate the columns
-	// 1 x 4 ---> 4 x 4, repate the rows
-	W1 := mat.NewDense(2, 2, []float64{2, 2, 2, 2})
-	X := mat.NewDense(2, 2, []float64{1, 1, 1, 1})
-	B1 := mat.NewDense(2, 1, []float64{1, 1})
-	Z1 := ann.Add(ann.Dot(W1, X), B1)
-
-	fmt.Println(Z1)
 }
