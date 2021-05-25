@@ -33,3 +33,21 @@ func TestTokenizeAndSteamText(t *testing.T) {
 		}
 	}
 }
+
+func TestExtractDataSizes(t *testing.T) {
+	xSize := 27
+	ySize := 27
+	inputSize := 33
+	outputSize := 7
+
+	data := ExtractData("../training_data/chats")
+
+	x1Size := len(data.X)
+	y1Size := len(data.Y)
+	input1Size := len(data.InputOptions)
+	output1Size := len(data.OutputOptions)
+
+	if xSize != x1Size || ySize != y1Size || inputSize != input1Size || outputSize != output1Size {
+		t.Fatalf(`Expected len(X): %v, len(Y): %v, len(InputSize): %v, len(OutputSize): %v, got %v, %v, %v, %v, correspondingly`, xSize, ySize, inputSize, outputSize, x1Size, y1Size, input1Size, output1Size)
+	}
+}
