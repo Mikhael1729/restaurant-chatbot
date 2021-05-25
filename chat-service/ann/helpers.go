@@ -85,13 +85,9 @@ func ExtractData(dataPath string) *ExtractedData {
 
 func GenerateDevTrainingExamples(dataPath string) ([][]int, []int) {
 	data := ExtractData(dataPath)
-	fmt.Println(data.InputOptions)
 
 	// Get a list of the output options. It'll be used to get the one-hot arrays.
-	outputOptions := make([]string, 0, len(data.OutputOptions))
-	for key := range data.OutputOptions {
-		outputOptions = append(outputOptions, key)
-	}
+	outputOptions := getKeys(data.OutputOptions)
 
 	// Generate training X and Y.
 	trainExamples := [][]int{}
@@ -102,7 +98,7 @@ func GenerateDevTrainingExamples(dataPath string) ([][]int, []int) {
 
 		// Add a new train example
 		trainExample := []int{}
-		for stemmedWord, _ := range data.InputOptions {
+		for stemmedWord := range data.InputOptions {
 			match := exists(input, stemmedWord)
 			if match {
 				trainExample = append(trainExample, 1)
@@ -133,4 +129,16 @@ func exists(strList []string, word string) bool {
 	}
 
 	return false
+}
+
+// getKeys returns a list with the keys of the provided map.
+func getKeys(dictionary map[string]bool) []string {
+	keys := make([]string, len(dictionary))
+	i := 0
+	for key := range dictionary {
+		keys[i] = key
+		i++
+	}
+
+	return keys
 }
