@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"github.com/Mikhael1729/restaurant-chatbot/models"
 	"log"
 	"net/http"
@@ -38,6 +38,7 @@ func (m *Messages) getMessages(rw http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(rw, "Unable to marshal messages json", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -49,26 +50,17 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
+		return
 	}
 
 	models.AddMessage(message)
 
-	rw.WriteHeader(http.StatusOK)
-	rw.Header().Set("Content-Type", "application/json")
+	//rw.WriteHeader(http.StatusOK)
 	//rw.WriteHeader(200)
-	_ = json.NewEncoder(rw).Encode(map[string]interface{}{"hmm": 1729})
+	//_ = json.NewEncoder(rw).Encode(map[string]interface{}{"hmm": 1729})
 	//http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
+	//rw.WriteHeader(http.StatusOK)
 }
-
-/*
-  {
-    status: 200,
-    body:
-    fdsa
-    fsa
-
-  }
-*/
 
 func setupCors(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Content-Type", "application/json")

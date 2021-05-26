@@ -14,8 +14,8 @@ import (
 )
 
 func main() {
-	//useTrainingData()
-	initializeServer()
+	useTrainingData()
+	//initializeServer()
 }
 
 // initializeServer creates a server with the handlers of the app.
@@ -66,7 +66,7 @@ func useTrainingData() {
 	//fmt.Println(parameters.W1)
 	//fmt.Println(forward.Z1)
 
-	Y := mat.NewDense(3, 1, []float64{0, 1, 2})
+	Y := mat.NewDense(5, 1, []float64{0, 1, 2, 3, 4})
 	B := ann.OneHot(Y)
 	fmt.Println(B)
 }

@@ -1,7 +1,7 @@
 package ann
 
 import (
-	"fmt"
+	//"fmt"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -65,34 +65,23 @@ func BackwardPropagation(forward *Forward, parameters *Parameters, examples *Exa
 
 }
 
-// Y(m, 1)
-func OneHot(Y mat.Matrix) mat.Dense {
-	// Create a (m, nL) array of 0s to store each one hot value.
-	rows, columns := Y.Dims()
-	fmt.Println(rows, columns)
-	dense := Y.(*mat.Dense)
-	size := rows * columns
+// OneHot2 returns a (m, nL) matrix containing the one-hot arrays for each training example.
+func OneHot(Y mat.Matrix) mat.Matrix {
+	rows, _ := Y.Dims()
 
 	maxValue := Max(Y)
-	oneHotY := *mat.NewDense(size, maxValue, nil)
+	oneHotY := mat.NewDense(rows, maxValue+1, nil)
 
 	for i := 0; i < rows; i++ {
-		value := dense.At(i, 0)
+		value := Y.(*mat.Dense).At(i, 0)
 		oneHotY.Set(i, int(value), 1)
 	}
 
-	oneHotY.T()
+	// Transpose matrix.
+	oneHotY = mat.DenseCopyOf(oneHotY.T())
+
 	return oneHotY
 }
-
-// OneHot2 returns a (m, nL) matrix containing the one-hot arrays for each training example.
-//func OneHot2(Y mat.Matrix) mat.Matrix {
-//// (m, nL)
-//rows, columns := Y.Dims()
-
-//oneHotY := mat.NewDense(rows, Max(Y), nil)
-
-//}
 
 //def one_hot(Y):
 //# Create a (m, nL) array of 0s to store each one hot value.
