@@ -13,11 +13,10 @@ type Dimensions struct {
 }
 
 type Parameters struct {
-	W1         mat.Matrix
-	B1         mat.Matrix
-	W2         mat.Matrix
-	B2         mat.Matrix
-	Dimensions Dimensions
+	W1 mat.Matrix
+	B1 mat.Matrix
+	W2 mat.Matrix
+	B2 mat.Matrix
 }
 
 type Forward struct {
@@ -47,7 +46,7 @@ func Initialize(n0 int, n1 int, n2 int) *Parameters {
 	W2 := mat.NewDense(n2, n1, GenerateRandNorm(n2, n1, 0.01))
 	b2 := mat.NewDense(n2, 1, nil)
 
-	return &Parameters{W1, b1, W2, b2, Dimensions{n0, n1, n2}}
+	return &Parameters{W1, b1, W2, b2}
 }
 
 func (p *Parameters) ForwardPropagation(X mat.Matrix) *Forward {
@@ -60,10 +59,10 @@ func (p *Parameters) ForwardPropagation(X mat.Matrix) *Forward {
 	return &Forward{Z1, A1, Z2, A2}
 }
 
-func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
-	_, m := e.X.Dims()
+func (f *Forward) BackwardPropagation(p *Parameters, x mat.Matrix, y mat.Matrix) *Backward {
+	_, m := x.Dims()
 
-	oneHotY := oneHot(e.Y)
+	oneHotY := oneHot(y)
 
 	byExamples := func(value float64) float64 {
 		return (1.0 / float64(m)) * value
@@ -74,7 +73,7 @@ func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
 	db2 := (1.0 / float64(m)) * mat.Sum(dZ2)
 
 	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, f.Z1))
-	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(e.X.T())))
+	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(x.T())))
 	db1 := 1.0 / float64(m) * mat.Sum(dZ2)
 
 	return &Backward{dW1, db1, dW2, db2}
@@ -94,7 +93,7 @@ func (p *Parameters) Update(b Backward, alpha float64) *Parameters {
 	return p
 }
 
-func GradientDescent(examples *Examples, alpha float64, iterations int) {
+func GradientDescent(examples *Examples, alpha float64, iterations int) *Parameters {
 	// Initialize network.
 	n0, _ := examples.X.Dims()
 	n1 := 20
@@ -104,7 +103,7 @@ func GradientDescent(examples *Examples, alpha float64, iterations int) {
 
 	for i := 0; i < iterations; i++ {
 		forward := parameters.ForwardPropagation(examples.X)
-		backward := forward.BackwardPropagation(parameters, examples)
+		backward := forward.BackwardPropagation(parameters, examples.X, examples.Y)
 		parameters.Update(*backward, alpha)
 		if i%10 == 0 {
 			predictions := getPredictions(forward.A2)
@@ -115,6 +114,8 @@ func GradientDescent(examples *Examples, alpha float64, iterations int) {
 			fmt.Println("---")
 		}
 	}
+
+	return parameters
 }
 
 func getAccuracy(predictions mat.Matrix, Y mat.Matrix) float64 {

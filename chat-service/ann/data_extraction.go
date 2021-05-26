@@ -1,6 +1,7 @@
 package ann
 
 import (
+	//"fmt"
 	"github.com/jdkato/prose/tokenize"
 	"github.com/kljensen/snowball"
 	"gonum.org/v1/gonum/mat"
@@ -15,11 +16,26 @@ type ExtractedData struct {
 	Y             []string        // The expected output of the examples X.
 }
 
-func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix, mat.Matrix) {
+//func ParseSentenceToInput(sentence string, inputOptions mat.Matrix) mat.Matrix {
+//sentenceWords := tokenizeAndSteamText(sentence)
+
+//trainExample := []float64{}
+//for stemmedWord := range data.InputOptions {
+//match := exists(input, stemmedWord)
+//if match {
+//trainExample = append(trainExample, 1)
+//} else {
+//trainExample = append(trainExample, 0)
+//}
+//}
+//}
+
+func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix, []string, []string) {
 	data := ExtractData(dataPath)
 
 	// Get a list of the output options. It'll be used to get the one-hot arrays.
 	outputOptions := getKeys(data.OutputOptions)
+	inputOptions := getKeys(data.InputOptions)
 
 	// Generate training X and Y.
 	trainExamples := [][]float64{}
@@ -30,7 +46,7 @@ func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix, mat.M
 
 		// Add a new train example
 		trainExample := []float64{}
-		for stemmedWord := range data.InputOptions {
+		for _, stemmedWord := range inputOptions {
 			match := exists(input, stemmedWord)
 			if match {
 				trainExample = append(trainExample, 1)
@@ -49,7 +65,8 @@ func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix, mat.M
 		}
 	}
 
-	return convertToMatrices(trainExamples, trainOutputs, outputOptions)
+	xMatrix, yMatrix := convertToMatrices(trainExamples, trainOutputs)
+	return xMatrix, yMatrix, inputOptions, outputOptions
 }
 
 // extractData takes the the training file examples to be used to generate
@@ -112,12 +129,9 @@ func normalizeWord(word string) string {
 	return word
 }
 
-func convertToMatrices(X [][]float64, Y []float64, YClasses []string) (mat.Matrix, mat.Matrix, mat.Matrix) {
+func convertToMatrices(X [][]float64, Y []float64) (mat.Matrix, mat.Matrix) {
 	xRows := len(X)
 	xColumns := len(X[0])
-
-	yRows := len(Y)
-	yColumns := 1
 
 	// Convert X into an unidemnsional array
 	xData := []float64{}
@@ -129,17 +143,10 @@ func convertToMatrices(X [][]float64, Y []float64, YClasses []string) (mat.Matri
 		}
 	}
 
-	// Convert YClasses into a []string
-	YNumberedClasses := []float64{}
-	for i, _ := range YClasses {
-		YNumberedClasses = append(YNumberedClasses, float64(i))
-	}
-
 	XMatrix := mat.NewDense(xRows, xColumns, xData)
-	YMatrix := mat.NewDense(yRows, yColumns, Y)
-	YClassesMatrix := mat.NewDense(len(YClasses), 1, YNumberedClasses)
+	YMatrix := mat.NewDense(len(Y), 1, Y)
 
-	return mat.DenseCopyOf(XMatrix.T()), YMatrix, YClassesMatrix
+	return mat.DenseCopyOf(XMatrix.T()), YMatrix
 }
 
 // exists tells if a given string exists into the given string array.
