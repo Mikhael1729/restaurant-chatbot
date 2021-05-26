@@ -1,26 +1,18 @@
 # Chat UI
 
-Chatbot web app.
+Chatbot web app
 
-## Project setup
+## Getting Started
+
+Type the commands below to have a copy of the project running:
+
+**Install the dependencies**:
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+**Run the project in dev mode**:
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
