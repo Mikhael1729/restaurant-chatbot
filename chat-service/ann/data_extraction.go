@@ -1,7 +1,6 @@
 package ann
 
 import (
-	//"fmt"
 	"github.com/jdkato/prose/tokenize"
 	"github.com/kljensen/snowball"
 	"gonum.org/v1/gonum/mat"
@@ -16,19 +15,22 @@ type ExtractedData struct {
 	Y             []string        // The expected output of the examples X.
 }
 
-//func ParseSentenceToInput(sentence string, inputOptions mat.Matrix) mat.Matrix {
-//sentenceWords := tokenizeAndSteamText(sentence)
+func ParseSentenceToInput(sentence string, inputs []string) mat.Matrix {
+	sentenceWords := tokenizeAndSteamText(sentence)
 
-//trainExample := []float64{}
-//for stemmedWord := range data.InputOptions {
-//match := exists(input, stemmedWord)
-//if match {
-//trainExample = append(trainExample, 1)
-//} else {
-//trainExample = append(trainExample, 0)
-//}
-//}
-//}
+	newInput := []float64{}
+	for _, inputWord := range inputs {
+		match := exists(sentenceWords, inputWord)
+		if match {
+			newInput = append(newInput, 1)
+		} else {
+			newInput = append(newInput, 0)
+		}
+	}
+
+	sentenceMatrix := mat.NewDense(len(newInput), 1, newInput)
+	return sentenceMatrix
+}
 
 func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix, []string, []string) {
 	data := ExtractData(dataPath)

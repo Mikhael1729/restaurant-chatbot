@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	//"fmt"
+	"fmt"
 	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
@@ -63,7 +63,13 @@ func useTrainingData() {
 	// Get training data.
 	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
 
-	// Create network.
+	// Create and train the network.
 	network := ann.NewAnn(inputs, outputs)
 	network.GradientDescent(x, y, 0.10, 500)
+
+	// Make prediction.
+	sentence := "Buen día"
+	category, certanty, _ := network.Classify(sentence)
+	fmt.Printf("Frase: %v\n", sentence)
+	fmt.Printf("category: %v\ncertanty: %v\n", category, certanty)
 }

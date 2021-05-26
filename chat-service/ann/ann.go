@@ -58,8 +58,15 @@ func NewAnn(inputs []string, outputs []string) *Ann {
 	}
 }
 
-func (ann *Ann) Classify(sentence string) {
+func (ann *Ann) Classify(sentence string) (string, float64, int) {
+	sentenceInput := ParseSentenceToInput(sentence, ann.Inputs)
+	forward := ann.ForwardPropagation(sentenceInput)
+	output := forward.A2
 
+	certanty, index := Max(output)
+	category := ann.Outputs[index]
+
+	return category, certanty, index
 }
 
 func (ann *Ann) GradientDescent(X mat.Matrix, Y mat.Matrix, alpha float64, iterations int) {
@@ -168,8 +175,8 @@ func getPredictions(A2 mat.Matrix) mat.Matrix {
 func oneHot(Y mat.Matrix) mat.Matrix {
 	rows, columns := Y.Dims()
 
-	maxValue := Max(Y)
-	oneHotY := mat.NewDense(rows*columns, maxValue+1, nil)
+	maxValue, _ := Max(Y)
+	oneHotY := mat.NewDense(rows*columns, int(maxValue)+1, nil)
 
 	for i := 0; i < rows; i++ {
 		value := Y.(*mat.Dense).At(i, 0)

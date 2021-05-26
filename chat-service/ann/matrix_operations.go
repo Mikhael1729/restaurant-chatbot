@@ -8,19 +8,21 @@ import (
 )
 
 // Max returns the largest value of an integer matrix.
-func Max(matrix mat.Matrix) int {
+func Max(matrix mat.Matrix) (float64, int) {
 	dense := matrix.(*mat.Dense)
 	data := dense.RawMatrix().Data
 
-	max := int(math.Inf(-1))
-	for _, value := range data {
-		intValue := int(value)
+	max := math.Inf(-1)
+	index := -1
+	for i, value := range data {
+		intValue := value
 		if intValue > max {
 			max = intValue
+			index = i
 		}
 	}
 
-	return max
+	return max, index
 }
 
 // Apply applies a function to every value of the given matrix.
