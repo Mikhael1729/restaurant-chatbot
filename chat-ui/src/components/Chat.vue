@@ -5,9 +5,17 @@
   </div>
 </template>
 
-<script setup>
-import InputSection from "./ChatInput";
-import ChatHistory from "./ChatHistory";
+<script lang="ts">
+import ChatHistory from "./ChatHistory.vue";
+import InputSection from "./ChatInput.vue";
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  components: {
+    ChatHistory,
+    InputSection,
+  }
+}
 </script>
 
 <style lang="scss" scoped>

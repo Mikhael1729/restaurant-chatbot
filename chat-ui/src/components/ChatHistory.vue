@@ -30,6 +30,7 @@ export default defineComponent({
       .then((res) => res.json())
       .then((data: Message[]) => {
         this.messages = data;
+        console.log(this.messages)
       });
   },
   methods: {

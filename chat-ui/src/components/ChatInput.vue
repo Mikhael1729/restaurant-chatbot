@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Message from "../models/Message";
 
 export default defineComponent({
   data() {
@@ -21,17 +22,16 @@ export default defineComponent({
   },
   methods: {
     sendMessage: async function () {
-      console.log(this.message);
       const response = await fetch("http://localhost:9090/messages", {
         method: "POST",
-        mode: "no-cors", // no-cors, *cors, same-origin
+        // mode: "no-cors", // no-cors, *cors, same-origin
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ text: this.message }),
       });
 
-      console.log(response);
+      const message: Message = await response.json();
     },
   },
 });
