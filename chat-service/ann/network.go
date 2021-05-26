@@ -1,7 +1,7 @@
 package ann
 
 import (
-	//"fmt"
+	"fmt"
 	"gonum.org/v1/gonum/mat"
 	"math"
 )
@@ -63,7 +63,7 @@ func (p *Parameters) ForwardPropagation(X mat.Matrix) *Forward {
 func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
 	_, m := e.X.Dims()
 
-	oneHotY := OneHot(e.Y)
+	oneHotY := oneHot(e.Y)
 
 	byExamples := func(value float64) float64 {
 		return (1.0 / float64(m)) * value
@@ -96,20 +96,32 @@ func (p *Parameters) Update(b Backward, alpha float64) *Parameters {
 
 func GradientDescent(examples *Examples, alpha float64, iterations int) {
 	// Initialize network.
-	//n0, _ := examples.X.Dims()
-	//n1 := 20
-	//n2, _ := examples.Y_classes.Dims()
+	n0, _ := examples.X.Dims()
+	n1 := 20
+	n2, _ := examples.Y_classes.Dims()
 
-	//parameters := Initialize(n0, n1, n2)
+	parameters := Initialize(n0, n1, n2)
 
-	//for i := 0; i < iterations; i++ {
-	//forward := parameters.ForwardPropagation(examples.X)
-	//backward := forward.BackwardPropagation(parameters, examples)
-	//update := parameters.Update(*backward, alpha)
-	//if i%10 == 0 {
-	//predictions :=
-	//}
-	//}
+	for i := 0; i < iterations; i++ {
+		forward := parameters.ForwardPropagation(examples.X)
+		backward := forward.BackwardPropagation(parameters, examples)
+		parameters.Update(*backward, alpha)
+		if i%10 == 0 {
+			predictions := getPredictions(forward.A2)
+			accuracy := getAccuracy(predictions, examples.Y)
+			fmt.Sprintf("Iteration %v: %v", i, accuracy)
+			fmt.Println(predictions)
+		}
+	}
+}
+
+func getAccuracy(predictions mat.Matrix, Y mat.Matrix) float64 {
+	rows, columns := Y.Dims()
+	size := rows * columns
+
+	accuracy := float64(Equality(predictions, Y)) / float64(size)
+
+	return accuracy
 }
 
 // getPredictions returns a matrix of (m, 1) with the predictions of each sample.
@@ -139,7 +151,7 @@ func getPredictions(A2 mat.Matrix) mat.Matrix {
 }
 
 // OneHot2 returns a (m, nL) matrix containing the one-hot arrays for each training example.
-func OneHot(Y mat.Matrix) mat.Matrix {
+func oneHot(Y mat.Matrix) mat.Matrix {
 	rows, columns := Y.Dims()
 
 	maxValue := Max(Y)
