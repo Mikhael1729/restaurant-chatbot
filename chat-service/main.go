@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	//"fmt"
 	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
@@ -60,7 +60,6 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	X, Y := ann.GenerateDevTrainingExamples("./training_data/chats")
-	fmt.Println(X)
-	fmt.Println(Y)
+	X, Y, classes := ann.GenerateDevTrainingExamples("./training_data/chats")
+	ann.GradientDescent(&ann.Examples{X: X, Y: Y, Classes: classes}, 0.10, 500)
 }

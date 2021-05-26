@@ -15,7 +15,7 @@ type ExtractedData struct {
 	Y             []string        // The expected output of the examples X.
 }
 
-func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix) {
+func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix, mat.Matrix) {
 	data := ExtractData(dataPath)
 
 	// Get a list of the output options. It'll be used to get the one-hot arrays.
@@ -49,7 +49,7 @@ func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix) {
 		}
 	}
 
-	return convertToMatrices(trainExamples, trainOutputs)
+	return convertToMatrices(trainExamples, trainOutputs, outputOptions)
 }
 
 // extractData takes the the training file examples to be used to generate
@@ -112,13 +112,14 @@ func normalizeWord(word string) string {
 	return word
 }
 
-func convertToMatrices(X [][]float64, Y []float64) (mat.Matrix, mat.Matrix) {
+func convertToMatrices(X [][]float64, Y []float64, YClasses []string) (mat.Matrix, mat.Matrix, mat.Matrix) {
 	xRows := len(X)
 	xColumns := len(X[0])
 
 	yRows := len(Y)
 	yColumns := 1
 
+	// Convert X into an unidemnsional array
 	xData := []float64{}
 	i := 0
 	for _, row := range X {
@@ -128,10 +129,17 @@ func convertToMatrices(X [][]float64, Y []float64) (mat.Matrix, mat.Matrix) {
 		}
 	}
 
+	// Convert YClasses into a []string
+	YNumberedClasses := []float64{}
+	for i, _ := range YClasses {
+		YNumberedClasses = append(YNumberedClasses, float64(i))
+	}
+
 	XMatrix := mat.NewDense(xRows, xColumns, xData)
 	YMatrix := mat.NewDense(yRows, yColumns, Y)
+	YClassesMatrix := mat.NewDense(len(YClasses), 1, YNumberedClasses)
 
-	return XMatrix, YMatrix
+	return mat.DenseCopyOf(XMatrix.T()), YMatrix, YClassesMatrix
 }
 
 // exists tells if a given string exists into the given string array.

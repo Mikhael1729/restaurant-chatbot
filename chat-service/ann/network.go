@@ -35,9 +35,9 @@ type Backward struct {
 }
 
 type Examples struct {
-	X         mat.Matrix
-	Y         mat.Matrix
-	Y_classes mat.Matrix
+	X       mat.Matrix
+	Y       mat.Matrix
+	Classes mat.Matrix
 }
 
 func Initialize(n0 int, n1 int, n2 int) *Parameters {
@@ -70,7 +70,7 @@ func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
 	}
 
 	dZ2 := Sub(f.A2, oneHotY)
-	dW2 := Apply(byExamples, Dot(dZ2, f.A2))
+	dW2 := Apply(byExamples, Dot(dZ2, mat.DenseCopyOf(f.A1.T())))
 	db2 := (1.0 / float64(m)) * mat.Sum(dZ2)
 
 	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, f.Z1))
@@ -98,7 +98,7 @@ func GradientDescent(examples *Examples, alpha float64, iterations int) {
 	// Initialize network.
 	n0, _ := examples.X.Dims()
 	n1 := 20
-	n2, _ := examples.Y_classes.Dims()
+	n2, _ := examples.Classes.Dims()
 
 	parameters := Initialize(n0, n1, n2)
 
@@ -109,8 +109,10 @@ func GradientDescent(examples *Examples, alpha float64, iterations int) {
 		if i%10 == 0 {
 			predictions := getPredictions(forward.A2)
 			accuracy := getAccuracy(predictions, examples.Y)
-			fmt.Sprintf("Iteration %v: %v", i, accuracy)
+			fmt.Printf("Iteration %v: %v", i, accuracy)
+			fmt.Println("")
 			fmt.Println(predictions)
+			fmt.Println("---")
 		}
 	}
 }
