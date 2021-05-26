@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
+	"gonum.org/v1/gonum/mat"
 	"log"
 	"net/http"
 	"os"
@@ -11,8 +14,8 @@ import (
 )
 
 func main() {
-	useTrainingData()
-	//initializeServer()
+	//useTrainingData()
+	initializeServer()
 }
 
 // initializeServer creates a server with the handlers of the app.
@@ -58,4 +61,12 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
+	//parameters := ann.Initialize(2, 3, 1)
+	//forward := parameters.ForwardPropagation(mat.NewDense(2, 2, []float64{2, 2, 2, 2}))
+	//fmt.Println(parameters.W1)
+	//fmt.Println(forward.Z1)
+
+	Y := mat.NewDense(3, 1, []float64{0, 1, 2})
+	B := ann.OneHot(Y)
+	fmt.Println(B)
 }

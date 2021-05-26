@@ -3,8 +3,25 @@ package ann
 import (
 	"errors"
 	"gonum.org/v1/gonum/mat"
+	"math"
 	"math/rand"
 )
+
+// Max returns the largest value of an integer matrix.
+func Max(matrix mat.Matrix) int {
+	dense := matrix.(*mat.Dense)
+	data := dense.RawMatrix().Data
+
+	max := int(math.Inf(-1))
+	for _, value := range data {
+		intValue := int(value)
+		if intValue > max {
+			max = intValue
+		}
+	}
+
+	return max
+}
 
 // Apply applies a function to every value of the given matrix.
 func Apply(function func(value float64) float64, matrix mat.Matrix) mat.Matrix {
