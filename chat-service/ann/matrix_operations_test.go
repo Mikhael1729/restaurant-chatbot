@@ -13,7 +13,7 @@ func TestSubIntegers(t *testing.T) {
 	resultData := c.(*mat.Dense).RawMatrix().Data
 	expectedData := []float64{1, 2, 1, 2}
 
-	perfectMatch, expected, result, i := verify(expectedData, resultData)
+	perfectMatch, expected, result, i := Verify(expectedData, resultData)
 	if !perfectMatch {
 		t.Fatalf(`Expected %v, got %v at index %v`, expected, result, i)
 	}
@@ -27,7 +27,7 @@ func TestSubDecimals(t *testing.T) {
 	resultData := c.(*mat.Dense).RawMatrix().Data
 	expectedData := []float64{1.5, 2.5, 1.5, 2.5}
 
-	perfectMatch, expected, result, i := verify(expectedData, resultData)
+	perfectMatch, expected, result, i := Verify(expectedData, resultData)
 	if !perfectMatch {
 		t.Fatalf(`Expected %v, got %v at index %v`, expected, result, i)
 	}
@@ -41,7 +41,7 @@ func TestDotIntegers(t *testing.T) {
 	resultData := c.(*mat.Dense).RawMatrix().Data
 	expectedData := []float64{16, 14}
 
-	perfectMatch, expected, result, i := verify(expectedData, resultData)
+	perfectMatch, expected, result, i := Verify(expectedData, resultData)
 	if !perfectMatch {
 		t.Fatalf(`Expected %v, got %v at index %v`, expected, result, i)
 	}
@@ -55,13 +55,13 @@ func TestDotDecimals(t *testing.T) {
 	resultData := c.(*mat.Dense).RawMatrix().Data
 	expectedData := []float64{0.06246894291693586}
 
-	perfectMatch, expected, result, i := verify(expectedData, resultData)
+	perfectMatch, expected, result, i := Verify(expectedData, resultData)
 	if !perfectMatch {
 		t.Fatalf(`Expected %v, got %v at index %v`, expected, result, i)
 	}
 }
 
-func verify(expectedData []float64, resultData []float64) (bool, float64, float64, int) {
+func Verify(expectedData []float64, resultData []float64) (bool, float64, float64, int) {
 	for i := 0; i < len(resultData); i++ {
 		expected := expectedData[i]
 		result := resultData[i]
