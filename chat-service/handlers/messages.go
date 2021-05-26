@@ -1,18 +1,27 @@
 package handlers
 
 import (
-	//"encoding/json"
+	"encoding/json"
+	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/models"
 	"log"
 	"net/http"
 )
 
 type Messages struct {
-	logger *log.Logger
+	logger  *log.Logger
+	network *ann.Ann
 }
 
 func NewMessages(logger *log.Logger) *Messages {
-	return &Messages{logger}
+	// Get training data.
+	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
+
+	// Create and train the network.
+	network := ann.NewAnn(inputs, outputs)
+	network.GradientDescent(x, y, 0.10, 500)
+
+	return &Messages{logger, network}
 }
 
 func (handler *Messages) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
@@ -53,8 +62,13 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Register new message.
 	models.AddMessage(message)
 
+	// Compute response
+	answer, category, _, _ := handler.network.Answer(message.Text)
+
+	json.NewEncoder(rw).Encode(map[string]interface{}{"answer": answer, "category": category})
 	//rw.WriteHeader(http.StatusOK)
 	//rw.WriteHeader(200)
 	//_ = json.NewEncoder(rw).Encode(map[string]interface{}{"hmm": 1729})

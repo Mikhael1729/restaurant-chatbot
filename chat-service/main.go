@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
 	"net/http"
@@ -13,8 +11,7 @@ import (
 )
 
 func main() {
-	useTrainingData()
-	//initializeServer()
+	initializeServer()
 }
 
 // initializeServer creates a server with the handlers of the app.
@@ -56,22 +53,4 @@ func initializeServer() {
 	// Close the server. It doesn't accept more requests and finish current work.
 	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	server.Shutdown(timeoutContext)
-}
-
-// useTrainingData extracts the training data and shows it in the console.
-func useTrainingData() {
-	// Get training data.
-	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
-
-	// Create and train the network.
-	network := ann.NewAnn(inputs, outputs)
-	network.GradientDescent(x, y, 0.10, 500)
-
-	// Make prediction.
-	sentence := "Buen día"
-	answer, category, certanty, _ := network.Answer(sentence)
-	fmt.Printf("Frase: %v\n", sentence)
-	fmt.Printf("Category: %v", category)
-	fmt.Printf("\nCertanty: %v\n", certanty)
-	fmt.Printf("Response: %v", answer)
 }
