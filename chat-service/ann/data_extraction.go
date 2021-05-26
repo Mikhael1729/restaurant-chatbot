@@ -3,6 +3,7 @@ package ann
 import (
 	"github.com/jdkato/prose/tokenize"
 	"github.com/kljensen/snowball"
+	"gonum.org/v1/gonum/mat"
 	"io/ioutil"
 	"strings"
 )
@@ -14,30 +15,41 @@ type ExtractedData struct {
 	Y             []string        // The expected output of the examples X.
 }
 
-// normalizeWord stem the given word.
-func normalizeWord(word string) string {
-	stemmed, err := snowball.Stem(word, "spanish", true)
+func GenerateDevTrainingExamples(dataPath string) (mat.Matrix, mat.Matrix) {
+	data := ExtractData(dataPath)
 
-	if err == nil {
-		return stemmed
+	// Get a list of the output options. It'll be used to get the one-hot arrays.
+	outputOptions := getKeys(data.OutputOptions)
+
+	// Generate training X and Y.
+	trainExamples := [][]float64{}
+	trainOutputs := []float64{} //
+	for i := 0; i < len(data.X); i++ {
+		input := data.X[i]
+		output := data.Y[i]
+
+		// Add a new train example
+		trainExample := []float64{}
+		for stemmedWord := range data.InputOptions {
+			match := exists(input, stemmedWord)
+			if match {
+				trainExample = append(trainExample, 1)
+			} else {
+				trainExample = append(trainExample, 0)
+			}
+		}
+
+		trainExamples = append(trainExamples, trainExample)
+
+		// Add the index of the correct category of the current example.
+		for i, category := range outputOptions {
+			if category == output {
+				trainOutputs = append(trainOutputs, float64(i))
+			}
+		}
 	}
 
-	return word
-}
-
-// tokenizeAndSteamSentence takes a text and return the tokenized and stemmed
-// words of that given text
-func tokenizeAndSteamText(sentence string) []string {
-	tokenizer := tokenize.NewTreebankWordTokenizer()
-	sentenceWords := tokenizer.Tokenize(sentence)
-
-	// Stem the words in sentenceWords.
-	for i := 0; i < len(sentenceWords); i++ {
-		stemmedWord := normalizeWord(sentenceWords[i])
-		sentenceWords[i] = stemmedWord
-	}
-
-	return sentenceWords
+	return convertToMatrices(trainExamples, trainOutputs)
 }
 
 // extractData takes the the training file examples to be used to generate
@@ -89,41 +101,37 @@ func ExtractData(dataPath string) *ExtractedData {
 	return data
 }
 
-func GenerateDevTrainingExamples(dataPath string) ([][]int, []int) {
-	data := ExtractData(dataPath)
+// normalizeWord stem the given word.
+func normalizeWord(word string) string {
+	stemmed, err := snowball.Stem(word, "spanish", true)
 
-	// Get a list of the output options. It'll be used to get the one-hot arrays.
-	outputOptions := getKeys(data.OutputOptions)
+	if err == nil {
+		return stemmed
+	}
 
-	// Generate training X and Y.
-	trainExamples := [][]int{}
-	trainOutputs := []int{} //
-	for i := 0; i < len(data.X); i++ {
-		input := data.X[i]
-		output := data.Y[i]
+	return word
+}
 
-		// Add a new train example
-		trainExample := []int{}
-		for stemmedWord := range data.InputOptions {
-			match := exists(input, stemmedWord)
-			if match {
-				trainExample = append(trainExample, 1)
-			} else {
-				trainExample = append(trainExample, 0)
-			}
-		}
+func convertToMatrices(X [][]float64, Y []float64) (mat.Matrix, mat.Matrix) {
+	xRows := len(X)
+	xColumns := len(X[0])
 
-		trainExamples = append(trainExamples, trainExample)
+	yRows := len(Y)
+	yColumns := 1
 
-		// Add the index of the correct category of the current example.
-		for i, category := range outputOptions {
-			if category == output {
-				trainOutputs = append(trainOutputs, i)
-			}
+	xData := []float64{}
+	i := 0
+	for _, row := range X {
+		for _, col := range row {
+			xData = append(xData, col)
+			i += 1
 		}
 	}
 
-	return trainExamples, trainOutputs
+	XMatrix := mat.NewDense(xRows, xColumns, xData)
+	YMatrix := mat.NewDense(yRows, yColumns, Y)
+
+	return XMatrix, YMatrix
 }
 
 // exists tells if a given string exists into the given string array.
@@ -147,4 +155,19 @@ func getKeys(dictionary map[string]bool) []string {
 	}
 
 	return keys
+}
+
+// tokenizeAndSteamSentence takes a text and return the tokenized and stemmed
+// words of that given text
+func tokenizeAndSteamText(sentence string) []string {
+	tokenizer := tokenize.NewTreebankWordTokenizer()
+	sentenceWords := tokenizer.Tokenize(sentence)
+
+	// Stem the words in sentenceWords.
+	for i := 0; i < len(sentenceWords); i++ {
+		stemmedWord := normalizeWord(sentenceWords[i])
+		sentenceWords[i] = stemmedWord
+	}
+
+	return sentenceWords
 }

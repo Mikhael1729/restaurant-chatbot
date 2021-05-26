@@ -3,17 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-
-	//"github.com/Mikhael1729/restaurant-chatbot/ann"
+	"github.com/Mikhael1729/restaurant-chatbot/ann"
+	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
-
-	"github.com/Mikhael1729/restaurant-chatbot/ann"
-	"github.com/Mikhael1729/restaurant-chatbot/handlers"
-	"gonum.org/v1/gonum/mat"
 )
 
 func main() {
@@ -64,25 +60,7 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	//slice := []float64{}
-	//matrix := mat.NewDense(3, 2, []float64{2, 3, 3, 2, 1, 2})
-	//h := mat.Col(nil, 0, matrix)
-	//fmt.Print(h)
-
-	X := mat.NewDense(2, 2, []float64{1, 2, 3, 4})
-	Y := mat.NewDense(2, 1, []float64{1, 0})
-	examples := &ann.Examples{X: X, Y: Y, Y_classes: mat.NewDense(2, 1, []float64{2, 3})}
-	parameters := ann.Initialize(2, 3, 2)
-	forward := parameters.ForwardPropagation(mat.NewDense(2, 2, []float64{2, 2, 2, 2}))
-	backward := forward.BackwardPropagation(parameters, examples)
-	ann.GradientDescent(examples, 0.10, 10)
-	fmt.Println(backward.DW2)
-
-	//fmt.Println(parameters.W1)
-	//fmt.Println(forward.Z1)
-	//fmt.Println(backward.DW2)
-
-	//Y := mat.NewDense(5, 1, []float64{0, 1, 2, 3, 4})
-	//B := ann.OneHot(Y)
-	//fmt.Println(B)
+	X, Y := ann.GenerateDevTrainingExamples("./training_data/chats")
+	fmt.Println(X)
+	fmt.Println(Y)
 }
