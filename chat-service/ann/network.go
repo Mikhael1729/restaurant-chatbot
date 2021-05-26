@@ -1,7 +1,7 @@
 package ann
 
 import (
-	//"fmt"
+	"fmt"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -27,10 +27,10 @@ type Forward struct {
 }
 
 type Backward struct {
-	dW1 mat.Matrix
-	db1 float64
-	dW2 mat.Matrix
-	db2 float64
+	DW1 mat.Matrix
+	Db1 float64
+	DW2 mat.Matrix
+	Db2 float64
 }
 
 type Examples struct {
@@ -58,7 +58,7 @@ func (p *Parameters) ForwardPropagation(X mat.Matrix) *Forward {
 	return &Forward{Z1, A1, Z2, A2}
 }
 
-func BackwardPropagation(f *Forward, p *Parameters, e *Examples) *Backward {
+func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
 	_, m := e.X.Dims()
 
 	oneHotY := OneHot(e.Y)
@@ -66,11 +66,15 @@ func BackwardPropagation(f *Forward, p *Parameters, e *Examples) *Backward {
 	byExamples := func(value float64) float64 { return float64(1/m) * value }
 
 	dZ2 := Sub(f.A2, oneHotY)
+	fmt.Println(dZ2)
+	fmt.Println("---")
 	dW2 := Apply(byExamples, Dot(dZ2, f.A2))
+	fmt.Println(f.A2)
+	fmt.Println("---")
 	db2 := float64(1/m) * mat.Sum(dZ2)
 
-	dZ1 := Multiply(Dot(p.W2.T(), dZ2), Apply(ReluDerivative, f.Z1))
-	dW1 := Apply(byExamples, Dot(dZ1, e.X.T()))
+	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, f.Z1))
+	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(e.X.T())))
 	db1 := float64(1/m) * mat.Sum(dZ2)
 
 	return &Backward{dW1, db1, dW2, db2}

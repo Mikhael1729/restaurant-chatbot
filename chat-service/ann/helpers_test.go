@@ -37,7 +37,7 @@ func TestTokenizeAndSteamText(t *testing.T) {
 func TestExtractDataSizes(t *testing.T) {
 	xSize := 27
 	ySize := 27
-	inputSize := 33
+	inputSize := 32
 	outputSize := 7
 
 	data := ExtractData("../training_data/chats")

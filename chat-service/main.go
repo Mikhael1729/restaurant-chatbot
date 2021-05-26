@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	//"fmt"
 	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"gonum.org/v1/gonum/mat"
@@ -61,12 +61,16 @@ func initializeServer() {
 
 // useTrainingData extracts the training data and shows it in the console.
 func useTrainingData() {
-	//parameters := ann.Initialize(2, 3, 1)
-	//forward := parameters.ForwardPropagation(mat.NewDense(2, 2, []float64{2, 2, 2, 2}))
+	X := mat.NewDense(2, 2, []float64{1, 2, 3, 4})
+	Y := mat.NewDense(2, 1, []float64{1, 0})
+	parameters := ann.Initialize(2, 3, 2)
+	forward := parameters.ForwardPropagation(mat.NewDense(2, 2, []float64{2, 2, 2, 2}))
+	forward.BackwardPropagation(parameters, &ann.Examples{X: X, Y: Y})
 	//fmt.Println(parameters.W1)
 	//fmt.Println(forward.Z1)
+	//fmt.Println(backward.DW2)
 
-	Y := mat.NewDense(5, 1, []float64{0, 1, 2, 3, 4})
-	B := ann.OneHot(Y)
-	fmt.Println(B)
+	//Y := mat.NewDense(5, 1, []float64{0, 1, 2, 3, 4})
+	//B := ann.OneHot(Y)
+	//fmt.Println(B)
 }

@@ -2,6 +2,7 @@ package ann
 
 import (
 	"errors"
+	//"fmt"
 	"gonum.org/v1/gonum/mat"
 	"math"
 	"math/rand"
