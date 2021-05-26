@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/models"
 	"log"
@@ -63,16 +63,17 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	// Register new message.
-	models.AddMessage(message.Text, models.Customer)
+	models.AddMessage(message.Text, "", models.Customer)
 
 	// Compute response
 	answer, category, _, _ := handler.network.Answer(message.Text)
 
 	// Register message from the bot.
-	models.AddMessage(answer, models.Bot)
+	botMessage := models.AddMessage(answer, category, models.Bot)
 
-	// Return an answer.
-	json.NewEncoder(rw).Encode(map[string]interface{}{"answer": answer, "category": category})
+	botMessage.ToJson(rw)
+
+	rw.WriteHeader(http.StatusOK)
 }
 
 func setupCors(rw http.ResponseWriter, req *http.Request) {
