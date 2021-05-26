@@ -8,6 +8,7 @@ type Message = {
   text: string;
   dateTime: string;
   sender: Sender;
+  category: string;
 };
 
 export default Message;
