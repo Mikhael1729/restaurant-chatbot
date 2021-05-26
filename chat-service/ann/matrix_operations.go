@@ -134,3 +134,19 @@ func Multiply(matrix1, matrix2 mat.Matrix) mat.Matrix {
 
 	return result
 }
+
+// Equality returns the quantity of values that matches on two matrices.
+func Equality(matrix1, matrix2 mat.Matrix) int {
+	data1 := matrix1.(*mat.Dense).RawMatrix().Data // Data from matrix 1
+	data2 := matrix2.(*mat.Dense).RawMatrix().Data // Data from matrix 1
+
+	matchesNumber := 0
+
+	for i := 0; i < len(data1); i++ {
+		if data1[i] == data2[i] {
+			matchesNumber += 1
+		}
+	}
+
+	return matchesNumber
+}

@@ -61,6 +61,18 @@ func TestDotDecimals(t *testing.T) {
 	}
 }
 
+func TestEquality(t *testing.T) {
+	a := mat.NewDense(2, 2, []float64{1, 2, 5, 6})
+	b := mat.NewDense(2, 2, []float64{1, 2, 3, 4})
+
+	expected := 2
+	result := Equality(a, b)
+
+	if expected != result {
+		t.Fatalf(`Expected %v, got %v`, expected, result)
+	}
+}
+
 func Verify(expectedData []float64, resultData []float64) (bool, float64, float64, int) {
 	for i := 0; i < len(resultData); i++ {
 		expected := expectedData[i]
