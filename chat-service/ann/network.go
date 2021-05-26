@@ -78,6 +78,20 @@ func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
 	return &Backward{dW1, db1, dW2, db2}
 }
 
+func (p *Parameters) Update(b Backward, alpha float64) *Parameters {
+	timesAlpha := func(value float64) float64 {
+		return alpha * value
+	}
+
+	p.W1 = Sub(p.W1, Apply(timesAlpha, b.DW1))
+	p.B1 = Sub(p.B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
+
+	p.W2 = Sub(p.W2, Apply(timesAlpha, b.DW2))
+	p.B2 = Sub(p.B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
+
+	return p
+}
+
 // OneHot2 returns a (m, nL) matrix containing the one-hot arrays for each training example.
 func OneHot(Y mat.Matrix) mat.Matrix {
 	rows, columns := Y.Dims()
