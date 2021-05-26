@@ -77,8 +77,13 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 }
 
 func setupCors(rw http.ResponseWriter, req *http.Request) {
-	rw.Header().Set("Content-Type", "application/json")
-	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	rw.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	rw.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	header := rw.Header()
+	header.Add("Access-Control-Allow-Origin", "*")
+	header.Add("Content-Type", "application/json")
+	header.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	header.Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	if req.Method == "OPTIONS" {
+		rw.WriteHeader(http.StatusOK)
+		return
+	}
 }
