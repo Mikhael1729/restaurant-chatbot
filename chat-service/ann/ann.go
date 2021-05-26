@@ -40,12 +40,6 @@ type Backward struct {
 	Db2 float64
 }
 
-type Examples struct {
-	X       mat.Matrix
-	Y       mat.Matrix
-	Classes mat.Matrix
-}
-
 func NewAnn(inputs []string, outputs []string) *Ann {
 	n0, n1, n2 := len(inputs), 20, len(outputs)
 	dimensions := Dimensions{N0: n0, N1: n1, N2: n2}
@@ -64,15 +58,19 @@ func NewAnn(inputs []string, outputs []string) *Ann {
 	}
 }
 
-func (ann *Ann) GradientDescent(x mat.Matrix, y mat.Matrix, alpha float64, iterations int) {
+func (ann *Ann) Classify(sentence string) {
+
+}
+
+func (ann *Ann) GradientDescent(X mat.Matrix, Y mat.Matrix, alpha float64, iterations int) {
 	for i := 0; i < iterations; i++ {
-		forward := ann.ForwardPropagation(x)
-		backward := ann.BackwardPropagation(forward, x, y)
+		forward := ann.ForwardPropagation(X)
+		backward := ann.BackwardPropagation(forward, X, Y)
 		ann.Update(*backward, alpha)
 
 		if i%10 == 0 {
 			predictions := getPredictions(forward.A2)
-			accuracy := getAccuracy(predictions, y)
+			accuracy := getAccuracy(predictions, Y)
 
 			fmt.Printf("Iteration %v: %v", i, accuracy)
 			fmt.Println("")
