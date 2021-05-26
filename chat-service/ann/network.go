@@ -82,15 +82,3 @@ func OneHot(Y mat.Matrix) mat.Matrix {
 
 	return oneHotY
 }
-
-//def one_hot(Y):
-//# Create a (m, nL) array of 0s to store each one hot value.
-//one_hot_Y = np.zeros((Y.size, Y.max() + 1))
-
-//# Place a one in each position indicated in Y (true labels)
-//one_hot_Y[np.arange(Y.size), Y] = 1
-
-//# Use a (nL, m) array instead. Each column is the one hot encoded labels
-//one_hot_Y = one_hot_Y.T
-
-//return one_hot_Y
