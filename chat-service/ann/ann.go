@@ -47,17 +47,28 @@ type Examples struct {
 }
 
 func NewAnn(inputs []string, outputs []string) *Ann {
-	dimensions := Dimensions{N0: len(inputs), N1: 20, N2: len(outputs)}
-	parameters := Initialize(dimensions.N0, dimensions.N1, dimensions.N2)
+	n0, n1, n2 := len(inputs), 20, len(outputs)
+	dimensions := Dimensions{N0: n0, N1: n1, N2: n2}
+	parameters := Parameters{
+		W1: mat.NewDense(n1, n0, GenerateRandNorm(n1, n0, 0.01)),
+		B1: mat.NewDense(n1, 1, nil),
+		W2: mat.NewDense(n2, n1, GenerateRandNorm(n2, n1, 0.01)),
+		B2: mat.NewDense(n2, 1, nil),
+	}
 
-	return &Ann{dimensions, inputs, outputs, *parameters}
+	return &Ann{
+		Dimensions: dimensions,
+		Inputs:     inputs,
+		Outputs:    outputs,
+		Parameters: parameters,
+	}
 }
 
 func (ann *Ann) GradientDescent(x mat.Matrix, y mat.Matrix, alpha float64, iterations int) {
 	for i := 0; i < iterations; i++ {
-		forward := ann.Parameters.ForwardPropagation(x)
-		backward := forward.BackwardPropagation(&ann.Parameters, x, y)
-		ann.Parameters.Update(*backward, alpha)
+		forward := ann.ForwardPropagation(x)
+		backward := ann.BackwardPropagation(forward, x, y)
+		ann.Update(*backward, alpha)
 
 		if i%10 == 0 {
 			predictions := getPredictions(forward.A2)
@@ -71,58 +82,49 @@ func (ann *Ann) GradientDescent(x mat.Matrix, y mat.Matrix, alpha float64, itera
 	}
 }
 
-func Initialize(n0 int, n1 int, n2 int) *Parameters {
-	W1 := mat.NewDense(n1, n0, GenerateRandNorm(n1, n0, 0.01))
-	b1 := mat.NewDense(n1, 1, nil)
+func (ann *Ann) ForwardPropagation(X mat.Matrix) *Forward {
+	W1, B1, W2, B2 := ann.Parameters.W1, ann.Parameters.B1, ann.Parameters.W2, ann.Parameters.B2
 
-	W2 := mat.NewDense(n2, n1, GenerateRandNorm(n2, n1, 0.01))
-	b2 := mat.NewDense(n2, 1, nil)
-
-	return &Parameters{W1, b1, W2, b2}
-}
-
-func (p *Parameters) ForwardPropagation(X mat.Matrix) *Forward {
-	Z1 := Add(Dot(p.W1, X), p.B1)
+	Z1 := Add(Dot(W1, X), B1)
 	A1 := Apply(Relu, Z1)
 
-	Z2 := Add(Dot(p.W2, A1), p.B2)
+	Z2 := Add(Dot(W2, A1), B2)
 	A2 := Apply(Softmax(Z2), Z2)
 
 	return &Forward{Z1, A1, Z2, A2}
 }
 
-func (f *Forward) BackwardPropagation(p *Parameters, x mat.Matrix, y mat.Matrix) *Backward {
-	_, m := x.Dims()
+func (ann *Ann) BackwardPropagation(forward *Forward, X mat.Matrix, Y mat.Matrix) *Backward {
+	p := ann.Parameters
+	_, m := X.Dims()
 
-	oneHotY := oneHot(y)
+	oneHotY := oneHot(Y)
 
 	byExamples := func(value float64) float64 {
 		return (1.0 / float64(m)) * value
 	}
 
-	dZ2 := Sub(f.A2, oneHotY)
-	dW2 := Apply(byExamples, Dot(dZ2, mat.DenseCopyOf(f.A1.T())))
+	dZ2 := Sub(forward.A2, oneHotY)
+	dW2 := Apply(byExamples, Dot(dZ2, mat.DenseCopyOf(forward.A1.T())))
 	db2 := (1.0 / float64(m)) * mat.Sum(dZ2)
 
-	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, f.Z1))
-	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(x.T())))
+	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, forward.Z1))
+	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(X.T())))
 	db1 := 1.0 / float64(m) * mat.Sum(dZ2)
 
 	return &Backward{dW1, db1, dW2, db2}
 }
 
-func (p *Parameters) Update(b Backward, alpha float64) *Parameters {
+func (ann *Ann) Update(b Backward, alpha float64) {
 	timesAlpha := func(value float64) float64 {
 		return alpha * value
 	}
 
-	p.W1 = Sub(p.W1, Apply(timesAlpha, b.DW1))
-	p.B1 = Sub(p.B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
+	ann.Parameters.W1 = Sub(ann.Parameters.W1, Apply(timesAlpha, b.DW1))
+	ann.Parameters.B1 = Sub(ann.Parameters.B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
 
-	p.W2 = Sub(p.W2, Apply(timesAlpha, b.DW2))
-	p.B2 = Sub(p.B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
-
-	return p
+	ann.Parameters.W2 = Sub(ann.Parameters.W2, Apply(timesAlpha, b.DW2))
+	ann.Parameters.B2 = Sub(ann.Parameters.B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
 }
 
 func getAccuracy(predictions mat.Matrix, Y mat.Matrix) float64 {
