@@ -73,6 +73,19 @@ func TestEquality(t *testing.T) {
 	}
 }
 
+func TestBroadcast(t *testing.T) {
+	original := mat.NewDense(1, 1, []float64{1729})
+	broadcasted := Broadcast(original, 2, 2)
+
+	expectedData := []float64{1729, 1729, 1729, 1729}
+	resultData := broadcasted.(*mat.Dense).RawMatrix().Data
+
+	perfectMatch, expected, result, i := Verify(expectedData, resultData)
+	if !perfectMatch {
+		t.Fatalf(`Expected %v, got %v at index %v`, expected, result, i)
+	}
+}
+
 func Verify(expectedData []float64, resultData []float64) (bool, float64, float64, int) {
 	for i := 0; i < len(resultData); i++ {
 		expected := expectedData[i]

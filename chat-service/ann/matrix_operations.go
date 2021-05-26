@@ -2,7 +2,6 @@ package ann
 
 import (
 	"errors"
-	//"fmt"
 	"gonum.org/v1/gonum/mat"
 	"math"
 	"math/rand"
@@ -107,8 +106,9 @@ func Broadcast(matrix mat.Matrix, rows int, columns int) mat.Matrix {
 	// Generate the apropiate amount of data for the new size
 	times := newDataSize / previousDataSize
 	data := dense.RawMatrix().Data
+	original := data
 	for i := 0; i < times-1; i++ {
-		data = append(data, data...)
+		data = append(data, original...)
 	}
 
 	return mat.NewDense(rows, columns, data)
