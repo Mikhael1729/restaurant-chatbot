@@ -95,7 +95,6 @@ func (ann *Ann) ForwardPropagation(X mat.Matrix) *Forward {
 }
 
 func (ann *Ann) BackwardPropagation(forward *Forward, X mat.Matrix, Y mat.Matrix) *Backward {
-	p := ann.Parameters
 	_, m := X.Dims()
 
 	oneHotY := oneHot(Y)
@@ -104,11 +103,13 @@ func (ann *Ann) BackwardPropagation(forward *Forward, X mat.Matrix, Y mat.Matrix
 		return (1.0 / float64(m)) * value
 	}
 
-	dZ2 := Sub(forward.A2, oneHotY)
-	dW2 := Apply(byExamples, Dot(dZ2, mat.DenseCopyOf(forward.A1.T())))
+	Z1, A1, A2 := forward.Z1, forward.A1, forward.A2
+
+	dZ2 := Sub(A2, oneHotY)
+	dW2 := Apply(byExamples, Dot(dZ2, mat.DenseCopyOf(A1.T())))
 	db2 := (1.0 / float64(m)) * mat.Sum(dZ2)
 
-	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, forward.Z1))
+	dZ1 := Multiply(Dot(mat.DenseCopyOf(ann.Parameters.W2.T()), dZ2), Apply(ReluDerivative, Z1))
 	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(X.T())))
 	db1 := 1.0 / float64(m) * mat.Sum(dZ2)
 
@@ -116,15 +117,18 @@ func (ann *Ann) BackwardPropagation(forward *Forward, X mat.Matrix, Y mat.Matrix
 }
 
 func (ann *Ann) Update(b Backward, alpha float64) {
+	parameters := &ann.Parameters
+	W1, B1, W2, B2 := parameters.W1, parameters.B1, parameters.W2, parameters.B2
+
 	timesAlpha := func(value float64) float64 {
 		return alpha * value
 	}
 
-	ann.Parameters.W1 = Sub(ann.Parameters.W1, Apply(timesAlpha, b.DW1))
-	ann.Parameters.B1 = Sub(ann.Parameters.B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
+	W1 = Sub(W1, Apply(timesAlpha, b.DW1))
+	B1 = Sub(B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
 
-	ann.Parameters.W2 = Sub(ann.Parameters.W2, Apply(timesAlpha, b.DW2))
-	ann.Parameters.B2 = Sub(ann.Parameters.B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
+	W2 = Sub(W2, Apply(timesAlpha, b.DW2))
+	B2 = Sub(B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
 }
 
 func getAccuracy(predictions mat.Matrix, Y mat.Matrix) float64 {
