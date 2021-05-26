@@ -58,6 +58,29 @@ func NewAnn(inputs []string, outputs []string) *Ann {
 	}
 }
 
+func (ann *Ann) Answer(sentence string) (string, string, float64, int) {
+	category, certanty, index := ann.Classify(sentence)
+	response := ""
+	switch classification := category; classification {
+	case "greeting":
+		response = "Buenas, espero se encuentre bien"
+	case "liked":
+		response = "Qué bueno, esperamos atenderle en otra oportunidad"
+	case "disliked":
+		response = "Sentimos que no haya sido de su agrado. No dude en comunicarse con nosotros sobre cualquier futuro inconveniente"
+	case "food,order,hamburger":
+		response = "Las opciones para hamburguesa son: Doble queso, Las Rascacielos, BBQ"
+	case "food,order,salad":
+		response = "Las opciones de ensalada que tenemos son: Ensalada verde, Ensalada de pollo"
+	case "food,order,pizza":
+		response = "Las opciones de pizza que disponemos son: Pizza Calzone"
+	default:
+		response = "Su inconveniente lo haremos informar con uno de nuestros asistentes, espere pronta respuesta."
+	}
+
+	return response, category, certanty, index
+}
+
 func (ann *Ann) Classify(sentence string) (string, float64, int) {
 	sentenceInput := ParseSentenceToInput(sentence, ann.Inputs)
 	forward := ann.ForwardPropagation(sentenceInput)

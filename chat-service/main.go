@@ -69,7 +69,9 @@ func useTrainingData() {
 
 	// Make prediction.
 	sentence := "Buen día"
-	category, certanty, _ := network.Classify(sentence)
+	answer, category, certanty, _ := network.Answer(sentence)
 	fmt.Printf("Frase: %v\n", sentence)
-	fmt.Printf("category: %v\ncertanty: %v\n", category, certanty)
+	fmt.Printf("Category: %v", category)
+	fmt.Printf("\nCertanty: %v\n", certanty)
+	fmt.Printf("Response: %v", answer)
 }
