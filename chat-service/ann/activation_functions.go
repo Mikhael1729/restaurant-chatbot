@@ -14,6 +14,15 @@ func Relu(z float64) float64 {
 	}
 }
 
+// ReluDerivative
+func ReluDerivative(z float64) float64 {
+	if z > 0 {
+		return 1
+	}
+
+	return 0
+}
+
 func Softmax(matrix mat.Matrix) func(z float64) float64 {
 	return func(z float64) float64 {
 		eSum := mat.Sum(Apply(exp, matrix))

@@ -76,6 +76,22 @@ func Add(matrix1, matrix2 mat.Matrix) mat.Matrix {
 	return resultMatrix
 }
 
+func Sub(matrix1, matrix2 mat.Matrix) mat.Matrix {
+	rows, columns := matrix1.Dims()
+	rows2, columns2 := matrix2.Dims()
+
+	resultMatrix := mat.NewDense(rows, columns, nil)
+	if rows*columns > rows2*columns2 {
+		resultMatrix.Sub(matrix1, Broadcast(matrix2, rows, columns))
+	} else if rows*columns == rows2*columns2 {
+		resultMatrix.Sub(matrix1, matrix2)
+	} else {
+		resultMatrix.Sub(Broadcast(matrix1, rows2, columns2), matrix2)
+	}
+
+	return resultMatrix
+}
+
 func Broadcast(matrix mat.Matrix, rows int, columns int) mat.Matrix {
 	dense := matrix.(*mat.Dense)
 	prevRows, prevColumns := dense.Dims()
@@ -106,4 +122,14 @@ func Dot(matrix1, matrix2 mat.Matrix) mat.Matrix {
 	product.Product(matrix1, matrix2)
 
 	return product
+}
+
+// Multiply
+func Multiply(matrix1, matrix2 mat.Matrix) mat.Matrix {
+	rows, columns := matrix1.Dims()
+
+	result := mat.NewDense(rows, columns, nil)
+	result.MulElem(matrix1, matrix2)
+
+	return result
 }
