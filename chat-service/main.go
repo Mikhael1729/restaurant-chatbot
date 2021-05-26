@@ -63,7 +63,7 @@ func useTrainingData() {
 	// Get training data.
 	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
 
-	//
+	// Create network.
 	network := ann.NewAnn(inputs, outputs)
-	network.GradientDescent2(x, y, 0.10, 500)
+	network.GradientDescent(x, y, 0.10, 500)
 }
