@@ -1,7 +1,7 @@
 package ann
 
 import (
-	"fmt"
+	//"fmt"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -63,19 +63,17 @@ func (f *Forward) BackwardPropagation(p *Parameters, e *Examples) *Backward {
 
 	oneHotY := OneHot(e.Y)
 
-	byExamples := func(value float64) float64 { return float64(1/m) * value }
+	byExamples := func(value float64) float64 {
+		return (1.0 / float64(m)) * value
+	}
 
 	dZ2 := Sub(f.A2, oneHotY)
-	fmt.Println(dZ2)
-	fmt.Println("---")
 	dW2 := Apply(byExamples, Dot(dZ2, f.A2))
-	fmt.Println(f.A2)
-	fmt.Println("---")
-	db2 := float64(1/m) * mat.Sum(dZ2)
+	db2 := (1.0 / float64(m)) * mat.Sum(dZ2)
 
 	dZ1 := Multiply(Dot(mat.DenseCopyOf(p.W2.T()), dZ2), Apply(ReluDerivative, f.Z1))
 	dW1 := Apply(byExamples, Dot(dZ1, mat.DenseCopyOf(e.X.T())))
-	db1 := float64(1/m) * mat.Sum(dZ2)
+	db1 := 1.0 / float64(m) * mat.Sum(dZ2)
 
 	return &Backward{dW1, db1, dW2, db2}
 }
