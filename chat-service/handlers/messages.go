@@ -63,17 +63,16 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	// Register new message.
-	models.AddMessage(message)
+	models.AddMessage(message.Text, models.Customer)
 
 	// Compute response
 	answer, category, _, _ := handler.network.Answer(message.Text)
 
+	// Register message from the bot.
+	models.AddMessage(answer, models.Bot)
+
+	// Return an answer.
 	json.NewEncoder(rw).Encode(map[string]interface{}{"answer": answer, "category": category})
-	//rw.WriteHeader(http.StatusOK)
-	//rw.WriteHeader(200)
-	//_ = json.NewEncoder(rw).Encode(map[string]interface{}{"hmm": 1729})
-	//http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
-	//rw.WriteHeader(http.StatusOK)
 }
 
 func setupCors(rw http.ResponseWriter, req *http.Request) {

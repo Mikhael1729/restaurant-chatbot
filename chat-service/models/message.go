@@ -29,11 +29,13 @@ func GetMessages() Messages {
 }
 
 // AddMessage adds a new Message to the database.
-func AddMessage(message *Message) {
-	message.Id = generateId()
-	message.Sender = Customer
-	message.DateTime = time.Now()
-	mockMessages = append(mockMessages, message)
+func AddMessage(text string, sender Sender) {
+	mockMessages = append(mockMessages, &Message{
+		Id:       generateId(),
+		Sender:   sender,
+		Text:     text,
+		DateTime: time.Now(),
+	})
 }
 
 // ToJson converts a Messages into JSON format.
