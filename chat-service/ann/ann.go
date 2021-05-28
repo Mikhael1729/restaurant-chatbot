@@ -1,16 +1,18 @@
 package ann
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/Mikhael1729/restaurant-chatbot/helpers"
 	"gonum.org/v1/gonum/mat"
 	"math"
 )
 
 type Ann struct {
-	Dimensions Dimensions
-	Inputs     []string
-	Outputs    []string
-	Parameters Parameters
+	Dimensions Dimensions `json:"dimensions"`
+	Inputs     []string   `json:"inputs"`
+	Outputs    []string   `json:"outputs"`
+	Parameters Parameters `json:"parameters"`
 }
 
 type Dimensions struct {
@@ -56,6 +58,20 @@ func NewAnn(inputs []string, outputs []string) *Ann {
 		Outputs:    outputs,
 		Parameters: parameters,
 	}
+}
+
+func (ann *Ann) SaveModel(filepath string) {
+	encoded, err := json.Marshal(ann)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Create a file, if exists, replace the content.
+	file := helpers.CreateFile(filepath)
+	defer helpers.CloseFile(file)
+
+	helpers.WriteFile(file, encoded)
 }
 
 func (ann *Ann) Answer(sentence string) (string, string, float64, int) {

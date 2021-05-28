@@ -20,6 +20,9 @@ func NewMessages(logger *log.Logger) *Messages {
 	network := ann.NewAnn(inputs, outputs)
 	network.GradientDescent(x, y, 0.10, 500)
 
+	// Save the model.
+	network.SaveModel("holam.model")
+
 	return &Messages{logger, network}
 }
 
