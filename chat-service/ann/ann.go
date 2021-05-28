@@ -8,6 +8,7 @@ import (
 	"math"
 )
 
+// AnnModel encodes the data of an ANN in an easy way to convert into JSON format.
 type AnnModel struct {
 	Dimensions Dimensions `json:"dimensions"`
 	Inputs     []string   `json:"inputs"`
@@ -83,23 +84,6 @@ func NewAnnModel(ann *Ann) *AnnModel {
 	return model
 }
 
-func (ann *Ann) SaveModel(filepath string) {
-	model := NewAnnModel(ann)
-
-	encoded, err := json.Marshal(model)
-
-	if err != nil {
-		panic(err)
-	}
-
-	// Create a file, if exists, replace the content.
-	file := helpers.CreateFile(filepath)
-	defer helpers.CloseFile(file)
-
-	content := string(encoded)
-	helpers.WriteFile(file, content)
-}
-
 func LoadModel(filepath string) (*Ann, error) {
 	file := helpers.GetData(filepath)
 
@@ -125,6 +109,23 @@ func LoadModel(filepath string) (*Ann, error) {
 	}
 
 	return ann, err
+}
+
+func (ann *Ann) SaveModel(filepath string) {
+	model := NewAnnModel(ann)
+
+	encoded, err := json.Marshal(model)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Create a file, if exists, replace the content.
+	file := helpers.CreateFile(filepath)
+	defer helpers.CloseFile(file)
+
+	content := string(encoded)
+	helpers.WriteFile(file, content)
 }
 
 func (ann *Ann) Answer(sentence string) (string, string, float64, int) {
