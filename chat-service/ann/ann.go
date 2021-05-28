@@ -8,6 +8,13 @@ import (
 	"math"
 )
 
+type AnnModel struct {
+	Dimensions Dimensions `json:"dimensions"`
+	Inputs     []string   `json:"inputs"`
+	Outputs    []string   `json:"outputs"`
+	Parameters map[string][]float64
+}
+
 type Ann struct {
 	Dimensions Dimensions `json:"dimensions"`
 	Inputs     []string   `json:"inputs"`
@@ -60,39 +67,26 @@ func NewAnn(inputs []string, outputs []string) *Ann {
 	}
 }
 
-func (ann *Ann) SaveModel(filepath string) {
-	p := ann.Parameters
-	W1Rows, W1Columns := p.W1.Dims()
-	B1Rows, B1Columns := p.B1.Dims()
-
-	W2Rows, W2Columns := p.W2.Dims()
-	B2Rows, B2Columns := p.B2.Dims()
-
-	inJson := map[string]interface{}{
-		"dimensions": ann.Dimensions,
-		"inputs":     ann.Inputs,
-		"outputs":    ann.Outputs,
-		"parameters": map[string]interface{}{
-			"W1": map[string]interface{}{
-				"shape": [2]int{W1Rows, W1Columns},
-				"value": ann.Parameters.W1.(*mat.Dense).RawMatrix().Data,
-			},
-			"B1": map[string]interface{}{
-				"shape": [2]int{B1Rows, B1Columns},
-				"value": ann.Parameters.B1.(*mat.Dense).RawMatrix().Data,
-			},
-			"W2": map[string]interface{}{
-				"shape": [2]int{W2Rows, W2Columns},
-				"value": ann.Parameters.W2.(*mat.Dense).RawMatrix().Data,
-			},
-			"B2": map[string]interface{}{
-				"shape": [2]int{B2Rows, B2Columns},
-				"value": ann.Parameters.B2.(*mat.Dense).RawMatrix().Data,
-			},
+func NewAnnModel(ann *Ann) *AnnModel {
+	model := &AnnModel{
+		Dimensions: ann.Dimensions,
+		Inputs:     ann.Inputs,
+		Outputs:    ann.Outputs,
+		Parameters: map[string][]float64{
+			"W1": ann.Parameters.W1.(*mat.Dense).RawMatrix().Data,
+			"B1": ann.Parameters.B1.(*mat.Dense).RawMatrix().Data,
+			"W2": ann.Parameters.W2.(*mat.Dense).RawMatrix().Data,
+			"B2": ann.Parameters.B2.(*mat.Dense).RawMatrix().Data,
 		},
 	}
 
-	encoded, err := json.Marshal(inJson)
+	return model
+}
+
+func (ann *Ann) SaveModel(filepath string) {
+	model := NewAnnModel(ann)
+
+	encoded, err := json.Marshal(model)
 
 	if err != nil {
 		panic(err)
@@ -106,21 +100,31 @@ func (ann *Ann) SaveModel(filepath string) {
 	helpers.WriteFile(file, content)
 }
 
-func LoadModel(filepath string) *Ann {
+func LoadModel(filepath string) (*Ann, error) {
 	file := helpers.GetData(filepath)
-	fmt.Println("LOAD: ")
-	fmt.Println(file)
 
-	ann := &Ann{}
-	err := json.Unmarshal(file, ann)
+	model := &AnnModel{}
+	err := json.Unmarshal(file, model)
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	fmt.Println(ann)
+	dims := model.Dimensions
 
-	return ann
+	ann := &Ann{
+		Inputs:     model.Inputs,
+		Dimensions: model.Dimensions,
+		Outputs:    model.Outputs,
+		Parameters: Parameters{
+			W1: mat.NewDense(dims.N1, dims.N0, model.Parameters["W1"]),
+			B1: mat.NewDense(dims.N1, 1, model.Parameters["B1"]),
+			W2: mat.NewDense(dims.N2, dims.N1, model.Parameters["W2"]),
+			B2: mat.NewDense(dims.N2, 1, model.Parameters["B2"]),
+		},
+	}
+
+	return ann, err
 }
 
 func (ann *Ann) Answer(sentence string) (string, string, float64, int) {

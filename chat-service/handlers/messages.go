@@ -18,12 +18,19 @@ func NewMessages(logger *log.Logger) *Messages {
 	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
 
 	// Create and train the network.
-	network := ann.NewAnn(inputs, outputs)
-	network.GradientDescent(x, y, 0.10, 500)
+	filePath := "saved_models/ann.model.json"
+	network, err := ann.LoadModel(filePath)
 
-	// Save the model.
-	network.SaveModel("saved_models/ann.model.json")
-	//ann.LoadModel("holam.model")
+	if err != nil {
+		network = ann.NewAnn(inputs, outputs)
+		network.GradientDescent(x, y, 0.10, 500)
+
+		// Save the model.
+		network.SaveModel(filePath)
+		logger.Printf("A new model has been saved on %v\n", filePath)
+	}
+
+	logger.Printf("The ANN model has been loaded succesfully from %v\n", filePath)
 
 	return &Messages{logger, network}
 }
