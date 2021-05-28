@@ -144,6 +144,8 @@ func (ann *Ann) Answer(sentence string) (string, string, float64, int) {
 		response = "Las opciones de ensalada que tenemos son: Ensalada verde, Ensalada de pollo"
 	case "food,order,pizza":
 		response = "Las opciones de pizza que disponemos son: Pizza Calzone"
+	case "food,order,soda":
+		response = "Las opciones de soda que disponemos son: Coca-Cola, Pepsi"
 	default:
 		response = "Su inconveniente lo haremos informar con uno de nuestros asistentes, espere pronta respuesta."
 	}
