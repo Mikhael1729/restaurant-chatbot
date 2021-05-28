@@ -18,11 +18,7 @@ export default defineComponent({
   emits: ["newMessage"],
   setup(_, context) {
     const message = ref("");
-
-    const addNewMessage = () => {
-      console.log(message.value);
-      context.emit("newMessage", message.value);
-    };
+    const addNewMessage = () => context.emit("newMessage", message.value);
 
     return { message, addNewMessage };
   },
