@@ -61,7 +61,38 @@ func NewAnn(inputs []string, outputs []string) *Ann {
 }
 
 func (ann *Ann) SaveModel(filepath string) {
-	encoded, err := json.Marshal(ann)
+	p := ann.Parameters
+	W1Rows, W1Columns := p.W1.Dims()
+	B1Rows, B1Columns := p.B1.Dims()
+
+	W2Rows, W2Columns := p.W2.Dims()
+	B2Rows, B2Columns := p.B2.Dims()
+
+	inJson := map[string]interface{}{
+		"dimensions": ann.Dimensions,
+		"inputs":     ann.Inputs,
+		"outputs":    ann.Outputs,
+		"parameters": map[string]interface{}{
+			"W1": map[string]interface{}{
+				"shape": [2]int{W1Rows, W1Columns},
+				"value": ann.Parameters.W1.(*mat.Dense).RawMatrix().Data,
+			},
+			"B1": map[string]interface{}{
+				"shape": [2]int{B1Rows, B1Columns},
+				"value": ann.Parameters.B1.(*mat.Dense).RawMatrix().Data,
+			},
+			"W2": map[string]interface{}{
+				"shape": [2]int{W2Rows, W2Columns},
+				"value": ann.Parameters.W2.(*mat.Dense).RawMatrix().Data,
+			},
+			"B2": map[string]interface{}{
+				"shape": [2]int{B2Rows, B2Columns},
+				"value": ann.Parameters.B2.(*mat.Dense).RawMatrix().Data,
+			},
+		},
+	}
+
+	encoded, err := json.Marshal(inJson)
 
 	if err != nil {
 		panic(err)
@@ -71,7 +102,25 @@ func (ann *Ann) SaveModel(filepath string) {
 	file := helpers.CreateFile(filepath)
 	defer helpers.CloseFile(file)
 
-	helpers.WriteFile(file, encoded)
+	content := string(encoded)
+	helpers.WriteFile(file, content)
+}
+
+func LoadModel(filepath string) *Ann {
+	file := helpers.GetData(filepath)
+	fmt.Println("LOAD: ")
+	fmt.Println(file)
+
+	ann := &Ann{}
+	err := json.Unmarshal(file, ann)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(ann)
+
+	return ann
 }
 
 func (ann *Ann) Answer(sentence string) (string, string, float64, int) {

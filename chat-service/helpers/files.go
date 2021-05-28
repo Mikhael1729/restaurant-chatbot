@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 )
 
@@ -26,4 +27,14 @@ func CloseFile(file *os.File) {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func GetData(path string) []byte {
+	fileData, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return fileData
 }

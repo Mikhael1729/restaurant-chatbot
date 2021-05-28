@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	"github.com/Mikhael1729/restaurant-chatbot/ann"
-	"github.com/Mikhael1729/restaurant-chatbot/models"
 	"log"
 	"net/http"
+
+	"github.com/Mikhael1729/restaurant-chatbot/ann"
+	"github.com/Mikhael1729/restaurant-chatbot/models"
 )
 
 type Messages struct {
@@ -21,7 +22,8 @@ func NewMessages(logger *log.Logger) *Messages {
 	network.GradientDescent(x, y, 0.10, 500)
 
 	// Save the model.
-	network.SaveModel("holam.model")
+	network.SaveModel("saved_models/ann.model.json")
+	//ann.LoadModel("holam.model")
 
 	return &Messages{logger, network}
 }
