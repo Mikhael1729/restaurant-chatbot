@@ -1,21 +1,68 @@
 <template>
-  <div class="chat">
-    <ChatHistory />
-    <InputSection />
+  <div class="chat" @update:sendMessage="hmm">
+    <ChatHistory :messages="messages" />
+    <InputSection @newMessage="sendMessage" />
   </div>
 </template>
 
 <script lang="ts">
 import ChatHistory from "./ChatHistory.vue";
 import InputSection from "./ChatInput.vue";
-import { defineComponent } from "vue";
+import Message from "../models/Message";
+import { defineComponent, ref, onMounted } from "vue";
+
+/*
+  ChatHistory
+    messages
+  InputSection
+    addMessage
+*/
+
+interface SendMessageResponse {
+  response: Message;
+  message: Message;
+}
 
 export default defineComponent({
-  components: {
-    ChatHistory,
-    InputSection,
-  }
-}
+  name: "chat",
+  components: { ChatHistory, InputSection },
+  setup() {
+    const messages = ref([] as Message[]);
+
+    const getMessages = async () => {
+      fetch("http://localhost:9090/messages")
+        .then((res) => res.json())
+        .then((data: Message[]) => {
+          messages.value = data || [];
+        });
+    };
+
+    const sendMessage = async (messageText: string) => {
+      const response = await fetch("http://localhost:9090/messages", {
+        method: "POST",
+        // mode: "no-cors", // no-cors, *cors, same-origin
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: messageText }),
+      });
+
+      console.log({response})
+      const data: SendMessageResponse = await response.json();
+      console.log({data})
+      messages.value.push(data.message);
+      messages.value.push(data.response);
+    };
+
+    onMounted(getMessages);
+
+    return {
+      messages,
+      getMessages,
+      sendMessage,
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>

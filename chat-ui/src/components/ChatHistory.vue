@@ -1,6 +1,6 @@
 <template>
-  <div class="chat-history" :class="{ 'empty-chat-history': isEmpty() }">
-    <div v-if="isEmpty()" class="is-empty">Historial vacío</div>
+  <div class="chat-history" :class="{ 'empty-chat-history': isEmpty }">
+    <div v-if="isEmpty" class="is-empty">Historial vacío</div>
     <template v-for="message in messages" :key="message.id">
       <ChatMessage
         :date="message.dateTime"
@@ -13,30 +13,21 @@
 
 <script lang="ts">
 import ChatMessage from "./ChatMessage.vue";
-import Message from "../models/Message";
-import { defineComponent } from "vue";
+import { defineComponent, PropType, ref, computed } from "vue";
 
 export default defineComponent({
-  components: {
-    ChatMessage,
-  },
-  data() {
+  name: "chat-history",
+  components: { ChatMessage },
+  props: { messages: Array as PropType<Array<number>> },
+  setup(props) {
+    const messages = ref(props.messages);
+    const isEmpty = computed(() => messages.value?.length === 0);
+
+    console.log(isEmpty)
+
     return {
-      messages: [] as Message[],
+      isEmpty,
     };
-  },
-  mounted() {
-    fetch("http://localhost:9090/messages")
-      .then((res) => res.json())
-      .then((data: Message[]) => {
-        this.messages = data;
-        console.log(this.messages)
-      });
-  },
-  methods: {
-    isEmpty: function () {
-      return this.messages.length === 0;
-    },
   },
 });
 </script>
@@ -45,7 +36,7 @@ export default defineComponent({
 .chat-history {
   background: inherit;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: flex-end;
   flex: 1;
   width: 100%;
