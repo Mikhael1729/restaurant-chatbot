@@ -31,11 +31,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .chat-history {
-  background: inherit;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  flex: 1;
   width: 100%;
   overflow: auto;
   padding: 1.5em;

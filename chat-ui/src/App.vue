@@ -20,6 +20,10 @@ import TitleDescription from "./components/TitleDescription";
   color: var(--text-color);
 }
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0px;
   background-color: var(--surface-b);
@@ -31,7 +35,6 @@ body {
 
 <style lang="scss" scoped>
 .container{
-  min-height: calc(100vh - 5em);
 }
 
 .title-description {
@@ -41,6 +44,6 @@ body {
 
 .chat {
   display: flex;
-  height: 100%;
+  max-height: calc(100vh - 5.5em);
 }
 </style>
