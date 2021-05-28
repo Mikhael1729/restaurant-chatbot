@@ -20,10 +20,7 @@ export default defineComponent({
   components: { ChatMessage },
   props: { messages: Array as PropType<Array<number>> },
   setup(props) {
-    const messages = ref(props.messages);
-    const isEmpty = computed(() => messages.value?.length === 0);
-
-    console.log(isEmpty)
+    const isEmpty = computed(() => props.messages?.length === 0);
 
     return {
       isEmpty,

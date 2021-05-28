@@ -1,5 +1,5 @@
 <template>
-  <div class="chat" @update:sendMessage="hmm">
+  <div class="chat">
     <ChatHistory :messages="messages" />
     <InputSection @newMessage="sendMessage" />
   </div>
@@ -10,13 +10,6 @@ import ChatHistory from "./ChatHistory.vue";
 import InputSection from "./ChatInput.vue";
 import Message from "../models/Message";
 import { defineComponent, ref, onMounted } from "vue";
-
-/*
-  ChatHistory
-    messages
-  InputSection
-    addMessage
-*/
 
 interface SendMessageResponse {
   response: Message;
@@ -47,9 +40,7 @@ export default defineComponent({
         body: JSON.stringify({ text: messageText }),
       });
 
-      console.log({response})
       const data: SendMessageResponse = await response.json();
-      console.log({data})
       messages.value.push(data.message);
       messages.value.push(data.response);
     };
