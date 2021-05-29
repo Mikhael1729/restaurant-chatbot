@@ -51,7 +51,7 @@ type Backward struct {
 }
 
 func NewAnn(inputs []string, outputs []string) *Ann {
-	n0, n1, n2 := len(inputs), 20, len(outputs)
+	n0, n1, n2 := len(inputs), 3, len(outputs)
 	dimensions := Dimensions{N0: n0, N1: n1, N2: n2}
 	parameters := Parameters{
 		W1: mat.NewDense(n1, n0, GenerateRandNorm(n1, n0, 0.01)),
@@ -193,7 +193,7 @@ func (ann *Ann) ForwardPropagation(X mat.Matrix) *Forward {
 	A1 := Apply(Relu, Z1)
 
 	Z2 := Add(Dot(W2, A1), B2)
-	A2 := Apply(Softmax(Z2), Z2)
+	A2 := Softmax(Z2)
 
 	return &Forward{Z1, A1, Z2, A2}
 }
@@ -221,18 +221,15 @@ func (ann *Ann) BackwardPropagation(forward *Forward, X mat.Matrix, Y mat.Matrix
 }
 
 func (ann *Ann) Update(b Backward, alpha float64) {
-	parameters := &ann.Parameters
-	W1, B1, W2, B2 := parameters.W1, parameters.B1, parameters.W2, parameters.B2
-
 	timesAlpha := func(value float64) float64 {
 		return alpha * value
 	}
 
-	W1 = Sub(W1, Apply(timesAlpha, b.DW1))
-	B1 = Sub(B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
+	ann.Parameters.W1 = Sub(ann.Parameters.W1, Apply(timesAlpha, b.DW1))
+	ann.Parameters.B1 = Sub(ann.Parameters.B1, mat.NewDense(1, 1, []float64{alpha * b.Db1}))
 
-	W2 = Sub(W2, Apply(timesAlpha, b.DW2))
-	B2 = Sub(B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
+	ann.Parameters.W2 = Sub(ann.Parameters.W2, Apply(timesAlpha, b.DW2))
+	ann.Parameters.B2 = Sub(ann.Parameters.B2, mat.NewDense(1, 1, []float64{alpha * b.Db2}))
 }
 
 func getAccuracy(predictions mat.Matrix, Y mat.Matrix) float64 {

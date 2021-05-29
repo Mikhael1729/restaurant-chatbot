@@ -1,11 +1,10 @@
 package handlers
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/Mikhael1729/restaurant-chatbot/ann"
 	"github.com/Mikhael1729/restaurant-chatbot/models"
+	"log"
+	"net/http"
 )
 
 type Messages struct {
@@ -18,12 +17,12 @@ func NewMessages(logger *log.Logger) *Messages {
 	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
 
 	// Create and train the network.
-	filePath := "saved_models/ann.model.json"
+	filePath := "./saved_models/ann.model.json"
 	network, err := ann.LoadModel(filePath)
 
 	if err != nil {
-		network = ann.NewAnn(inputs, outputs)
-		network.GradientDescent(x, y, 0.10, 500)
+		network := ann.NewAnn(inputs, outputs)
+		network.GradientDescent(x, y, 0.10, 10000)
 
 		// Save the model.
 		network.SaveModel(filePath)

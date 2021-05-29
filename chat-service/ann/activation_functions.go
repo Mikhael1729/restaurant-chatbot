@@ -23,15 +23,29 @@ func ReluDerivative(z float64) float64 {
 	return 0
 }
 
-func Softmax(matrix mat.Matrix) func(z float64) float64 {
-	return func(z float64) float64 {
-		eSum := mat.Sum(Apply(exp, matrix))
-		exp := math.Exp(z)
+func Softmax(matrix mat.Matrix) mat.Matrix {
+	eSum := Sum(Apply(toExp, matrix))
+	_, columns := matrix.Dims()
 
-		return exp / eSum
+	rows, columns := matrix.Dims()
+	outputMatrix := mat.NewDense(rows, columns, nil)
+
+	applyFunc := func(i, j int, value float64) float64 {
+		result := math.Exp(matrix.At(i, j)) / eSum.At(0, j)
+		return result
 	}
+
+	outputMatrix.Apply(applyFunc, matrix)
+
+	return outputMatrix
 }
 
-func exp(value float64) float64 {
+func toExp(value float64) float64 {
 	return math.Exp(value)
+}
+
+func byESum(sum float64) func(float64) float64 {
+	return func(value float64) float64 {
+		return math.Exp(value)
+	}
 }
