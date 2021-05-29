@@ -9,12 +9,8 @@
 import ChatHistory from "./ChatHistory.vue";
 import InputSection from "./ChatInput.vue";
 import Message, { Sender } from "../models/Message";
+import SendMessageResponse from "../models/SendMessageResponse";
 import { defineComponent, ref, onMounted } from "vue";
-
-interface SendMessageResponse {
-  response: Message;
-  message: Message;
-}
 
 export default defineComponent({
   name: "chat",
