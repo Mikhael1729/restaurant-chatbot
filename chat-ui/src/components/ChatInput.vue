@@ -4,23 +4,38 @@
     <Button
       label="Enviar"
       class="send-button p-button-outlined"
-      icon="pi pi-send"
+      :icon="icon"
       v-on:click="addNewMessage"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 
 export default defineComponent({
   name: "chat-input",
   emits: ["newMessage"],
-  setup(_, context) {
+  props: {
+    loading: Boolean,
+  },
+  setup(props, context) {
     const message = ref("");
     const addNewMessage = () => context.emit("newMessage", message.value);
+    const icon = ref("pi pi-send")
 
-    return { message, addNewMessage };
+    // Show loading icon when the data is being send.
+    watch(
+      () => props.loading,
+      (first, second) => {
+        if (props.loading)
+          icon.value = "pi pi-spin pi-spinner";
+        else
+          icon.value = "pi pi-send"
+      }
+    );
+
+    return { message, addNewMessage, icon };
   },
 });
 </script>

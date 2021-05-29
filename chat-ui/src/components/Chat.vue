@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <ChatHistory :messages="messages" />
-    <InputSection @newMessage="sendMessage" />
+    <InputSection @newMessage="sendMessage" :loading="loading" />
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default defineComponent({
   components: { ChatHistory, InputSection },
   setup() {
     const messages = ref([] as Message[]);
+    const loading = ref(false);
 
     const getMessages = async () => {
       fetch("http://localhost:9090/messages")
@@ -31,18 +32,18 @@ export default defineComponent({
     };
 
     const sendMessage = async (messageText: string) => {
+      loading.value = true;
       const response = await fetch("http://localhost:9090/messages", {
         method: "POST",
-        // mode: "no-cors", // no-cors, *cors, same-origin
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ text: messageText }),
       });
 
-      const data: SendMessageResponse = await response.json();
-      messages.value.push(data.message);
-      messages.value.push(data.response);
+      loading.value = false;
+      const responseMessage: Message = await response.json();
+      messages.value.push(responseMessage);
     };
 
     onMounted(getMessages);
@@ -51,6 +52,7 @@ export default defineComponent({
       messages,
       getMessages,
       sendMessage,
+      loading,
     };
   },
 });
