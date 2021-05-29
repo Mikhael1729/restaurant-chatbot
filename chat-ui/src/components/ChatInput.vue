@@ -22,16 +22,17 @@ export default defineComponent({
   setup(props, context) {
     const message = ref("");
     const addNewMessage = () => context.emit("newMessage", message.value);
-    const icon = ref("pi pi-send")
+    const icon = ref("pi pi-send");
 
     // Show loading icon when the data is being send.
     watch(
       () => props.loading,
       (first, second) => {
-        if (props.loading)
+        if (props.loading) {
           icon.value = "pi pi-spin pi-spinner";
-        else
-          icon.value = "pi pi-send"
+        } else {
+          icon.value = "pi pi-send";
+        }
       }
     );
 

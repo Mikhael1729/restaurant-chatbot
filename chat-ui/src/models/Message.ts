@@ -4,7 +4,7 @@ export enum Sender {
 }
 
 type Message = {
-  id: string;
+  id: number;
   text: string;
   dateTime: string;
   sender: Sender;

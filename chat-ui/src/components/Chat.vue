@@ -8,7 +8,7 @@
 <script lang="ts">
 import ChatHistory from "./ChatHistory.vue";
 import InputSection from "./ChatInput.vue";
-import Message from "../models/Message";
+import Message, { Sender } from "../models/Message";
 import { defineComponent, ref, onMounted } from "vue";
 
 interface SendMessageResponse {
@@ -33,6 +33,17 @@ export default defineComponent({
 
     const sendMessage = async (messageText: string) => {
       loading.value = true;
+
+      const userMessage: Message = {
+        id: 0,
+        text: messageText,
+        dateTime: "",
+        sender: Sender.Customer,
+        category: "",
+      };
+
+      messages.value.push(userMessage);
+
       const response = await fetch("http://localhost:9090/messages", {
         method: "POST",
         headers: {
@@ -41,9 +52,12 @@ export default defineComponent({
         body: JSON.stringify({ text: messageText }),
       });
 
+      const data: SendMessageResponse = await response.json();
+
+      messages.value[messages.value.length - 1] = data.message;
+      messages.value.push(data.response);
+
       loading.value = false;
-      const responseMessage: Message = await response.json();
-      messages.value.push(responseMessage);
     };
 
     onMounted(getMessages);

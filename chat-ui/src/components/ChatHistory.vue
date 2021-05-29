@@ -18,28 +18,20 @@
 
 <script lang="ts">
 import ChatMessage from "./ChatMessage.vue";
-import {
-  defineComponent,
-  PropType,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onRenderTriggered,
-  onRenderTracked,
-} from "vue";
+import Message from "../models/Message";
+import { defineComponent, PropType, ref, computed, watch } from "vue";
 
 export default defineComponent({
   name: "chat-history",
   components: { ChatMessage },
-  props: { messages: Array as PropType<Array<number>> },
-  setup(props, context) {
+  props: { messages: Array as PropType<Array<Message>> },
+  setup(props) {
     const isEmpty = computed(() => props.messages?.length === 0);
     const historyRef = ref(null);
 
     watch(
       () => props.messages?.length,
-      (first, second) => {
+      () => {
         const el: any = historyRef.value;
         if (el) {
           el.scrollTop = el.scrollHeight;
