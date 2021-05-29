@@ -7,6 +7,27 @@ import (
 	"math/rand"
 )
 
+// Sum returns the sum of the elements on each column of the given matrix.
+func Sum(matrix mat.Matrix) mat.Matrix {
+	_, columns := matrix.Dims()
+
+	sums := []float64{}
+	for j := 0; j < columns; j++ {
+		currentColumn := mat.Col(nil, j, matrix)
+
+		sum := 0.0
+		for _, value := range currentColumn {
+			sum += value
+		}
+
+		sums = append(sums, sum)
+	}
+
+	sumsMatrix := mat.NewDense(1, columns, sums)
+
+	return sumsMatrix
+}
+
 // Max returns the largest value of an integer matrix.
 func Max(matrix mat.Matrix) (float64, int) {
 	dense := matrix.(*mat.Dense)
