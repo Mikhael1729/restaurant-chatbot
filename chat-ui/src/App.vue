@@ -1,5 +1,5 @@
 <template>
-  <div class="container p-grid">
+  <div class="p-grid">
     <div class="title-description p-col-12 p-lg-4">
       <TitleDescription />
     </div>
@@ -34,9 +34,6 @@ body {
 </style>
 
 <style lang="scss" scoped>
-.container{
-}
-
 .title-description {
   display: flex;
   justify-content: center;
@@ -44,6 +41,6 @@ body {
 
 .chat {
   display: flex;
-  max-height: calc(100vh - 5.5em);
+  height: calc(100vh - 5.5em);
 }
 </style>
