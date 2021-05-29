@@ -177,8 +177,9 @@ func (ann *Ann) GradientDescent(X mat.Matrix, Y mat.Matrix, alpha float64, itera
 		if i%10 == 0 {
 			predictions := getPredictions(forward.A2)
 			accuracy := getAccuracy(predictions, Y)
+			loss := computeLoss(forward.A2, Y)
 
-			fmt.Printf("Iteration %v: %v", i, accuracy)
+			fmt.Printf("Iteration %v: (loss: %v, accuracy: %v)", i, loss, accuracy)
 			fmt.Println("")
 			fmt.Println(predictions)
 			fmt.Println("---")
@@ -239,6 +240,20 @@ func getAccuracy(predictions mat.Matrix, Y mat.Matrix) float64 {
 	accuracy := float64(Equality(predictions, Y)) / float64(size)
 
 	return accuracy
+}
+
+func computeLoss(A mat.Matrix, Y mat.Matrix) float64 {
+	log := func(value float64) float64 {
+		return math.Log(value)
+	}
+
+	oneHotY := oneHot(Y)
+	ALog := Apply(log, A)
+	logProducts := Multiply(oneHotY, ALog)
+
+	sum := -1 * mat.Sum(logProducts)
+
+	return sum
 }
 
 // getPredictions returns a matrix of (m, 1) with the predictions of each sample.
