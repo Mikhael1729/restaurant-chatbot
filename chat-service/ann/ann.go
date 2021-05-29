@@ -85,7 +85,11 @@ func NewAnnModel(ann *Ann) *AnnModel {
 }
 
 func LoadModel(filepath string) (*Ann, error) {
-	file := helpers.GetData(filepath)
+	file, fileError := helpers.GetData(filepath)
+
+	if fileError != nil {
+		return nil, fileError
+	}
 
 	model := &AnnModel{}
 	err := json.Unmarshal(file, model)

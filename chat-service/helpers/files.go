@@ -29,12 +29,12 @@ func CloseFile(file *os.File) {
 	}
 }
 
-func GetData(path string) []byte {
+func GetData(path string) ([]byte, error) {
 	fileData, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return fileData
+	return fileData, nil
 }
