@@ -55,7 +55,6 @@ export default defineComponent({
   overflow: auto;
   padding: 1.5em;
   flex: 1;
-  background: red;
 
   & > *:not(:last-child) {
     margin-bottom: 1em;
