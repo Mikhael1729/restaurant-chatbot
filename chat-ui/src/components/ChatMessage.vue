@@ -80,6 +80,10 @@ export default defineComponent({
     border-color: var(--text-color-secondary);
     color: var(--text-color);
     background: inherit;
+    max-width: 50%;
+    overflow: auto;
+    overflow-wrap: break-word;
+    margin-bottom: 1em;
 
     p {
       margin-bottom: 0.5em;
