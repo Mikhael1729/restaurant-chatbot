@@ -1,13 +1,13 @@
 <template>
-  <div class="input-section">
+  <form class="input-section" v-on:submit.prevent="addNewMessage">
     <InputText v-model="message" class="input-message" />
     <Button
+      type="submit"
       label="Enviar"
       class="send-button p-button-outlined"
       :icon="icon"
-      v-on:click="addNewMessage"
     />
-  </div>
+  </form>
 </template>
 
 <script lang="ts">
