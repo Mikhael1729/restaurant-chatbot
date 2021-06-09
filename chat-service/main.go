@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
+	"github.com/go-chi/chi/v5/middleware"
 	"log"
 	"net/http"
 	"os"
@@ -22,13 +25,26 @@ func initializeServer() {
 	// Create the handlers.
 	messagesHandler := handlers.NewMessages(logger)
 
-	serveMux := http.NewServeMux()
-	serveMux.Handle("/messages", messagesHandler)
+	// Initialize the router handler.
+	chiRouter := chi.NewRouter()
+	chiRouter.Use(middleware.Logger)
+
+	chiRouter.Use(cors.Handler(cors.Options{
+		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
+		AllowedOrigins: []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300,
+	}))
+	chiRouter.Get("/messages", messagesHandler.GetMessages)
+	chiRouter.Post("/messages", messagesHandler.AddMessage)
 
 	// Create my own server.
 	server := &http.Server{
 		Addr:         ":9090",
-		Handler:      serveMux,
+		Handler:      chiRouter,
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,

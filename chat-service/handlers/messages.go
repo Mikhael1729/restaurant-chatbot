@@ -34,24 +34,8 @@ func NewMessages(logger *log.Logger) *Messages {
 	return &Messages{logger, network}
 }
 
-func (handler *Messages) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	setupCors(rw, r)
-	if r.Method == http.MethodGet {
-		handler.getMessages(rw, r)
-		return
-	}
-
-	if r.Method == http.MethodPost {
-		handler.addMessage(rw, r)
-		return
-	}
-
-	// Catch all.
-	rw.WriteHeader(http.StatusMethodNotAllowed)
-}
-
 // getMessages process the GET method for the handler
-func (m *Messages) getMessages(rw http.ResponseWriter, r *http.Request) {
+func (m *Messages) GetMessages(rw http.ResponseWriter, r *http.Request) {
 	messages := models.GetMessages()
 	err := messages.ToJson(rw)
 
@@ -62,7 +46,7 @@ func (m *Messages) getMessages(rw http.ResponseWriter, r *http.Request) {
 }
 
 // addMessages process the POST method for the handler
-func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
+func (handler *Messages) AddMessage(rw http.ResponseWriter, r *http.Request) {
 	message := &models.Message{}
 
 	err := message.FromJson(r.Body)
@@ -84,18 +68,4 @@ func (handler *Messages) addMessage(rw http.ResponseWriter, r *http.Request) {
 	// Send response.
 	messageResponse := models.NewMessageResponse(*message, *botMessage)
 	messageResponse.ToJson(rw)
-
-	rw.WriteHeader(http.StatusOK)
-}
-
-func setupCors(rw http.ResponseWriter, req *http.Request) {
-	header := rw.Header()
-	header.Add("Access-Control-Allow-Origin", "*")
-	header.Add("Content-Type", "application/json")
-	header.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	header.Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	if req.Method == "OPTIONS" {
-		rw.WriteHeader(http.StatusOK)
-		return
-	}
 }

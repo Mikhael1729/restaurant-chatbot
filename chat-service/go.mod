@@ -3,6 +3,8 @@ module github.com/Mikhael1729/restaurant-chatbot
 go 1.15
 
 require (
+	github.com/go-chi/chi/v5 v5.0.3
+	github.com/go-chi/cors v1.2.0 // indirect
 	github.com/jdkato/prose v1.2.1
 	github.com/kljensen/snowball v0.6.0
 	github.com/neurosnap/sentences v1.0.6 // indirect
