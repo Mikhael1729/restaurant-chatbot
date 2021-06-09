@@ -29,8 +29,8 @@ func initializeServer() {
 	chiRouter := chi.NewRouter()
 	chiRouter.Use(middleware.Logger)
 
+	// Configure cors.
 	chiRouter.Use(cors.Handler(cors.Options{
-		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -38,6 +38,8 @@ func initializeServer() {
 		AllowCredentials: false,
 		MaxAge:           300,
 	}))
+	
+	// Register endpoints.
 	chiRouter.Get("/messages", messagesHandler.GetMessages)
 	chiRouter.Post("/messages", messagesHandler.AddMessage)
 

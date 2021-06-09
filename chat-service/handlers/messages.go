@@ -17,12 +17,12 @@ func NewMessages(logger *log.Logger) *Messages {
 	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
 
 	// Create and train the network.
-	filePath := "./saved_models/ann.model.json"
+	filePath := "./saved_models/ann.model13.json"
 	network, err := ann.LoadModel(filePath)
 
 	if err != nil {
-		network := ann.NewAnn(inputs, outputs)
-		network.GradientDescent(x, y, 0.10, 10000)
+		network = ann.NewAnn(inputs, outputs)
+		network.GradientDescent(x, y, 0.9, 10000)
 
 		// Save the model.
 		network.SaveModel(filePath)
@@ -34,7 +34,7 @@ func NewMessages(logger *log.Logger) *Messages {
 	return &Messages{logger, network}
 }
 
-// getMessages process the GET method for the handler
+// MetMessages process the GET method for the handler
 func (m *Messages) GetMessages(rw http.ResponseWriter, r *http.Request) {
 	messages := models.GetMessages()
 	err := messages.ToJson(rw)
@@ -45,7 +45,7 @@ func (m *Messages) GetMessages(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// addMessages process the POST method for the handler
+// AddMessages process the POST method for the handler
 func (handler *Messages) AddMessage(rw http.ResponseWriter, r *http.Request) {
 	message := &models.Message{}
 

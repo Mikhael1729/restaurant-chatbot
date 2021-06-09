@@ -51,7 +51,7 @@ type Backward struct {
 }
 
 func NewAnn(inputs []string, outputs []string) *Ann {
-	n0, n1, n2 := len(inputs), 3, len(outputs)
+	n0, n1, n2 := len(inputs), 40, len(outputs)
 	dimensions := Dimensions{N0: n0, N1: n1, N2: n2}
 	parameters := Parameters{
 		W1: mat.NewDense(n1, n0, GenerateRandNorm(n1, n0, 0.01)),
