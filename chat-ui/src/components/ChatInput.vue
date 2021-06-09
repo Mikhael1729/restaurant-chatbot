@@ -26,7 +26,7 @@ export default defineComponent({
     const addNewMessage = () => {
       context.emit("newMessage", message.value);
       message.value = "";
-    }
+    };
 
     // Show loading icon when the data is being send.
     watch(
