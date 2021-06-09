@@ -5,16 +5,14 @@
     :class="{ 'empty-chat-history': isEmpty }"
     ref="historyRef"
   >
-    <div class="messages">
-      <div v-if="isEmpty" class="is-empty">Historial vacío</div>
-      <template v-for="message in messages" :key="message.id">
-        <ChatMessage
-          :date="message.dateTime"
-          :text="message.text"
-          :sender="message.sender"
-        />
-      </template>
-    </div>
+    <div v-if="isEmpty" class="is-empty">Historial vacío</div>
+    <template v-for="message in messages" :key="message.id">
+      <ChatMessage
+        :date="message.dateTime"
+        :text="message.text"
+        :sender="message.sender"
+      />
+    </template>
   </div>
 </template>
 
@@ -52,21 +50,18 @@ export default defineComponent({
 <style lang="scss" scoped>
 .chat-history {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   overflow: auto;
   padding: 1.5em;
   flex: 1;
+  background: red;
 
   & > *:not(:last-child) {
     margin-bottom: 1em;
   }
 }
 
-.messages {
-  align-self: flex-end;
-  width: 100%;
-}
 .empty-chat-history {
   align-items: center;
   justify-content: center;
