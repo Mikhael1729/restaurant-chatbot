@@ -3,9 +3,9 @@
     id="history"
     class="chat-history"
     :class="{ 'empty-chat-history': isEmpty }"
-    ref="historyRef"
   >
     <div v-if="isEmpty" class="is-empty">Historial vacío</div>
+    <div v-if="!isEmpty" class="space" />
     <template v-for="message in messages" :key="message.id">
       <ChatMessage
         :date="message.dateTime"
@@ -19,7 +19,7 @@
 <script lang="ts">
 import ChatMessage from "./ChatMessage.vue";
 import Message from "../models/Message";
-import { defineComponent, PropType, ref, computed, watch } from "vue";
+import { defineComponent, PropType, computed } from "vue";
 
 export default defineComponent({
   name: "chat-history",
@@ -27,21 +27,9 @@ export default defineComponent({
   props: { messages: Array as PropType<Array<Message>> },
   setup(props) {
     const isEmpty = computed(() => props.messages?.length === 0);
-    const historyRef = ref(null);
-
-    watch(
-      () => props.messages?.length,
-      () => {
-        const el: any = historyRef.value;
-        if (el) {
-          el.scrollTop = el.scrollHeight;
-        }
-      }
-    );
 
     return {
       isEmpty,
-      historyRef,
     };
   },
 });
@@ -59,6 +47,10 @@ export default defineComponent({
   & > *:not(:last-child) {
     margin-bottom: 1em;
   }
+}
+
+.space {
+  flex: 1;
 }
 
 .empty-chat-history {

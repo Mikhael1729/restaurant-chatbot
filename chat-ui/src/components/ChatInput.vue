@@ -31,7 +31,7 @@ export default defineComponent({
     // Show loading icon when the data is being send.
     watch(
       () => props.loading,
-      (first, second) => {
+      () => {
         if (props.loading) {
           icon.value = "pi pi-spin pi-spinner";
         } else {
