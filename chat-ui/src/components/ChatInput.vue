@@ -21,8 +21,12 @@ export default defineComponent({
   },
   setup(props, context) {
     const message = ref("");
-    const addNewMessage = () => context.emit("newMessage", message.value);
     const icon = ref("pi pi-send");
+
+    const addNewMessage = () => {
+      context.emit("newMessage", message.value);
+      message.value = "";
+    }
 
     // Show loading icon when the data is being send.
     watch(
