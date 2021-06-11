@@ -1,4 +1,5 @@
 <template>
+  <Message v-if="error" severity="error">{{ error }}</Message>
   <div
     id="history"
     class="chat-history"
@@ -24,7 +25,7 @@ import { defineComponent, PropType, computed } from "vue";
 export default defineComponent({
   name: "chat-history",
   components: { ChatMessage },
-  props: { messages: Array as PropType<Array<Message>> },
+  props: { messages: Array as PropType<Array<Message>>, error: String },
   setup(props) {
     const isEmpty = computed(() => props.messages?.length === 0);
 
@@ -43,6 +44,7 @@ export default defineComponent({
   overflow: auto;
   padding: 1.5em;
   flex: 1;
+  color: var(--text-color);
 
   & > *:not(:last-child) {
     margin-bottom: 1em;

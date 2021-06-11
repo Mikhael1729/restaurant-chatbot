@@ -18,6 +18,7 @@ export default defineComponent({
   emits: ["newMessage"],
   props: {
     loading: Boolean,
+    error: String,
   },
   setup(props, context) {
     const message = ref("");
@@ -25,7 +26,6 @@ export default defineComponent({
 
     const addNewMessage = () => {
       context.emit("newMessage", message.value);
-      message.value = "";
     };
 
     // Show loading icon when the data is being send.
@@ -36,6 +36,7 @@ export default defineComponent({
           icon.value = "pi pi-spin pi-spinner";
         } else {
           icon.value = "pi pi-send";
+          if (message.value && !props.error) message.value = "";
         }
       }
     );

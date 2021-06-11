@@ -24,13 +24,13 @@
   max-width: 25rem;
   padding: 2em;
   align-self: center;
+  color: #dbdbdb;
 
   img {
     width: 80px;
   }
 
   h1 {
-    color: #dbdbdb;
     font-size: 2.5em;
   }
 

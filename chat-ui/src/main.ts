@@ -4,6 +4,7 @@ import store from "./store";
 import PrimeVue from "primevue/config";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
+import Message from "primevue/message";
 import Avatar from "primevue/avatar";
 import Card from "primevue/card";
 
@@ -21,5 +22,6 @@ createApp(App)
   .component("InputText", InputText)
   .component("Avatar", Avatar)
   .component("Card", Card)
+  .component("Message", Message)
   // Mounting
   .mount("#app");

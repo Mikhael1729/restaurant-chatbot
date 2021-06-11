@@ -17,7 +17,6 @@ import TitleDescription from "./components/TitleDescription";
 <style>
 * {
   font-family: var(--font-family);
-  color: var(--text-color);
 }
 
 html {
