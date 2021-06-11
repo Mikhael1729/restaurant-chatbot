@@ -1,5 +1,5 @@
 <template>
-  <Message v-if="error" severity="error">{{ error }}</Message>
+  <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
   <div
     id="history"
     class="chat-history"

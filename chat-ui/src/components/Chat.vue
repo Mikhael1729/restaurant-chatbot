@@ -63,7 +63,7 @@ export default defineComponent({
         if (error.value) error.value = "";
       } catch (e) {
         error.value =
-          "Lo sentimos, su mensaje no pudo ser enviado, intente de nuevo más tarde";
+          "Lo sentimos, su mensaje no pudo ser enviado. intente de nuevo más tarde";
       }
       loading.value = false;
     };
