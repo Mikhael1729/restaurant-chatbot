@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/Mikhael1729/restaurant-chatbot/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/go-chi/httprate"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -30,21 +30,23 @@ func main() {
 
 // initializeServer creates a server with the handlers of the app.
 func initializeServer() {
-	// Define the logger for the handlers.
 	logger := log.New(os.Stdout, "chat-service", log.LstdFlags) // chat-serviceYYY/MM/dd 00:00:00 <message>
 
-	// Create the handlers.
 	messagesHandler := handlers.NewMessages(logger, "./saved_models/ann.model13.json")
 
-
-	// Initialize the router handler.
-	chiRouter := chi.NewRouter()
-	chiRouter.Use(middleware.Logger) // Add logger middleware.
-
 	allowedOrigin := os.Getenv("ALLOWED_ORIGINS")
+
+	chiRouter := chi.NewRouter()
+
+	chiRouter.Use(middleware.Logger)
+	chiRouter.Use(httprate.Limit(
+		5,
+		1*time.Second,
+		httprate.WithKeyFuncs(httprate.KeyByIP, httprate.KeyByEndpoint),
+	))
 	chiRouter.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{allowedOrigin},
-		AllowedMethods:   []string{"GET", "POST"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: false,
 		MaxAge:           300,
@@ -78,18 +80,6 @@ func initializeServer() {
 	logger.Println("Yo have terminated the server", <-sigChan)
 
 	// Close the server. It doesn't accept more requests and finish current work.
-	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	go func() {
-		fmt.Println("antes")
-		time.Sleep(time.Second * 2)
-		fmt.Println("despues")
-		cancel()
-	}()
-	go func() {
-		select {
-		case <-timeoutContext.Done():
-			fmt.Println(":O")
-		}
-	}()
+	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	server.Shutdown(timeoutContext)
 }
