@@ -132,8 +132,9 @@ func (ann *Ann) SaveModel(filepath string) {
 	helpers.WriteFile(file, content)
 }
 
-func (ann *Ann) Answer(sentence string) (string, string, float64, int) {
-	category, certanty, index := ann.Classify(sentence)
+// Answer returns the phrase, category, certantiy of the categorization, the forward propagation values and the index of the choosen category of the given sentence by the network.
+func (ann *Ann) Answer(sentence string) (string, string, float64, Forward, int) {
+	category, certanty, forward, index := ann.Classify(sentence)
 	response := ""
 	switch classification := category; classification {
 	case "greeting":
@@ -154,10 +155,10 @@ func (ann *Ann) Answer(sentence string) (string, string, float64, int) {
 		response = "Su inconveniente lo haremos informar con uno de nuestros asistentes, espere pronta respuesta."
 	}
 
-	return response, category, certanty, index
+	return response, category, certanty, forward, index
 }
 
-func (ann *Ann) Classify(sentence string) (string, float64, int) {
+func (ann *Ann) Classify(sentence string) (string, float64, Forward, int) {
 	sentenceInput := ParseSentenceToInput(sentence, ann.Inputs)
 	forward := ann.ForwardPropagation(sentenceInput)
 	output := forward.A2
@@ -165,7 +166,7 @@ func (ann *Ann) Classify(sentence string) (string, float64, int) {
 	certanty, index := Max(output)
 	category := ann.Outputs[index]
 
-	return category, certanty, index
+	return category, certanty, *forward, index
 }
 
 func (ann *Ann) GradientDescent(X mat.Matrix, Y mat.Matrix, alpha float64, iterations int) {

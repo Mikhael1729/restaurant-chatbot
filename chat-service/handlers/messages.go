@@ -12,24 +12,22 @@ type Messages struct {
 	network *ann.Ann
 }
 
-func NewMessages(logger *log.Logger) *Messages {
-	// Get training data.
-	x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
-
+func NewMessages(logger *log.Logger, modelPath string) *Messages {
 	// Create and train the network.
-	filePath := "./saved_models/ann.model13.json"
-	network, err := ann.LoadModel(filePath)
+	network, err := ann.LoadModel(modelPath)
 
 	if err != nil {
+		// Get training data.
+		x, y, inputs, outputs := ann.GenerateDevTrainingExamples("./training_data/chats")
 		network = ann.NewAnn(inputs, outputs)
 		network.GradientDescent(x, y, 0.9, 10000)
 
 		// Save the model.
-		network.SaveModel(filePath)
-		logger.Printf("A new model has been saved on %v\n", filePath)
+		network.SaveModel(modelPath)
+		logger.Printf("A new model has been saved on %v\n", modelPath)
 	}
 
-	logger.Printf("The ANN model has been loaded succesfully from %v\n", filePath)
+	logger.Printf("The ANN model has been loaded succesfully from %v\n", modelPath)
 
 	return &Messages{logger, network}
 }
@@ -60,7 +58,7 @@ func (handler *Messages) AddMessage(rw http.ResponseWriter, r *http.Request) {
 	message = models.AddMessage(message.Text, "", models.Customer)
 
 	// Compute response
-	answer, category, _, _ := handler.network.Answer(message.Text)
+	answer, category, _, _, _ := handler.network.Answer(message.Text)
 
 	// Register message from the bot.
 	botMessage := models.AddMessage(answer, category, models.Bot)
