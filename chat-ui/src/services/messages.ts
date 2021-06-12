@@ -1,8 +1,10 @@
 import Message from "../models/Message";
 import SendMessageResponse from "../models/SendMessageResponse";
 
+const apiUrl = process.env.VUE_APP_API_URL;
+
 export async function sendMessage(messageText: string): Promise<SendMessageResponse> {
-  const response = await fetch("http://localhost:9090/messages", {
+  const response = await fetch(`${apiUrl}/messages`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,9 +16,8 @@ export async function sendMessage(messageText: string): Promise<SendMessageRespo
 }
 
 export async function getMessages(): Promise<Message[]> {
-  const response = await fetch("http://localhost:9090/messages");
+  const response = await fetch(`${apiUrl}/messages`);
   const data: Message[] = await response.json();
 
   return data;
 }
-

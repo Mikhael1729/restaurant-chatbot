@@ -24,7 +24,6 @@ export default defineComponent({
     const getMessages = async () => {
       try {
         const data: Message[] = await service.getMessages();
-
         messages.value = data || [];
 
         if (error.value) error.value = "";
