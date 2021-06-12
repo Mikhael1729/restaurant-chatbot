@@ -10,6 +10,7 @@ import ChatHistory from "./ChatHistory.vue";
 import InputSection from "./ChatInput.vue";
 import Message, { Sender } from "../models/Message";
 import SendMessageResponse from "../models/SendMessageResponse";
+import * as service from "../services/messages";
 import { defineComponent, ref, onMounted } from "vue";
 
 export default defineComponent({
@@ -20,13 +21,9 @@ export default defineComponent({
     const loading = ref(false);
     const error = ref("");
 
-    // servidro: back, front
-    // client: browser 
-
     const getMessages = async () => {
       try {
-        const response = await fetch("http://localhost:9090/messages");
-        const data: Message[] = await response.json();
+        const data: Message[] = await service.getMessages();
 
         messages.value = data || [];
 
@@ -49,18 +46,9 @@ export default defineComponent({
           category: "",
         };
 
-        const response = await fetch("http://localhost:9090/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ text: messageText }),
-        });
+        const data = await service.sendMessage(messageText);
 
         messages.value.push(userMessage);
-
-        const data: SendMessageResponse = await response.json();
-
         messages.value[messages.value.length - 1] = data.message;
         messages.value.push(data.response);
         if (error.value) error.value = "";
