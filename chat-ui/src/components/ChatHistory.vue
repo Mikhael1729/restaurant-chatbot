@@ -1,5 +1,7 @@
 <template>
-  <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+  <div v-if="error" class="error-message">
+    <i class="pi pi-times"></i>{{ error }}
+  </div>
   <div
     id="history"
     class="chat-history"
@@ -37,6 +39,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.error-message {
+  background: inherit !important;
+  color: var(--pink-100) !important;
+  border: 1px solid var(--pink-100);
+  padding: 1em;
+  border-radius: 10px;
+}
+
+.pi-times {
+  margin-right: 1em;
+  border: 2px solid var(--pink-100);
+  padding: 0.3em;
+  border-radius: 50%;
+}
+
 .chat-history {
   display: flex;
   flex-direction: column;

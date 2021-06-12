@@ -20,6 +20,9 @@ export default defineComponent({
     const loading = ref(false);
     const error = ref("");
 
+    // servidro: back, front
+    // client: browser 
+
     const getMessages = async () => {
       try {
         const response = await fetch("http://localhost:9090/messages");
